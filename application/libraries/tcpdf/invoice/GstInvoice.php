@@ -997,6 +997,15 @@ class GstInvoice extends MyPDF{
 			$totals_html .= '</tr>';
 		}
 
+		// QR-only row: keep QR codes visible when no summary rows exist (e.g. store TRN empty, no discount)
+		if ($qr_side_rows === 0 && $qr_side_inner !== '') {
+			$totals_html .= '<tr>';
+			$totals_html .= '<td colspan="3" style="border:none;border-bottom:none;padding-top:2px;width:'.$col_left.'%; vertical-align:middle;">'.$qr_side_inner.'</td>';
+			$totals_html .= '<td style="width: '.$col_r_left.'%; border-bottom:none; border-left:0.5px solid #AAAAAA; border-right:none;">&nbsp;</td>';
+			$totals_html .= '<td style="width: '.$col_r_right.'%; border-bottom:none; border-left:none; border-right:0.5px solid #AAAAAA;">&nbsp;</td>';
+			$totals_html .= '</tr>';
+		}
+
 		// Final row: Amount in Words + Net Total
 		$totals_html .= '<tr>';
 		$totals_html .= '<td colspan="3" style="width:'.$col_left.'%;border-top:none;"><div style="font-size:12px;">';
@@ -1688,6 +1697,15 @@ class GstInvoice extends MyPDF{
 			$totals_html .= '<td class="text-right" style="height:22px; font-size:13px; width: '.$col_r_right.'%; border-bottom:none; border-left:0.5px solid #AAAAAA; border-right:0.5px solid #AAAAAA;">';
 			$totals_html .= store_number_format($change_return_amount);
 			$totals_html .= '</td>';
+			$totals_html .= '</tr>';
+		}
+
+		// QR-only row: keep QR codes visible when no summary rows exist (e.g. store TRN empty, no discount)
+		if ($qr_side_rows === 0 && $qr_side_inner !== '') {
+			$totals_html .= '<tr>';
+			$totals_html .= '<td colspan="3" style="border:none;border-bottom:none;padding-top:2px;width:'.$col_left.'%; vertical-align:middle;">'.$qr_side_inner.'</td>';
+			$totals_html .= '<td style="width: '.$col_r_left.'%; border-bottom:none; border-left:0.5px solid #AAAAAA; border-right:none;">&nbsp;</td>';
+			$totals_html .= '<td style="width: '.$col_r_right.'%; border-bottom:none; border-left:none; border-right:0.5px solid #AAAAAA;">&nbsp;</td>';
 			$totals_html .= '</tr>';
 		}
 

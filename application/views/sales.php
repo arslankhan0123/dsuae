@@ -1624,7 +1624,26 @@
          }
       }
 
+      // Cash / walk-in customer (CU-2026-0001): lock 'Adjust Advance Payment' and show all dues as 0
+      var CASH_CUSTOMER_CODE = 'CU-2026-0001';
+      function is_cash_customer_selected() {
+         return (($('option:selected', '#customer_id').attr('data-customer_code') || '').toString().trim() === CASH_CUSTOMER_CODE);
+      }
+      function apply_cash_customer_rules() {
+         var cash = is_cash_customer_selected();
+         var $cb = $('#allow_tot_advance');
+         if (!$cb.length) { return cash; }
+         if (cash) {
+            $cb.prop('checked', false);
+            $('#advance_amount').prop('disabled', true).val('0.00');
+         }
+         $cb.prop('disabled', cash);
+         if ($.fn.iCheck) { $cb.iCheck('update'); }
+         return cash;
+      }
+
       function update_refund_amount() {
+         var cashCustomer = apply_cash_customer_rules();
          if (!$("#refund_amount").length) {
             return;
          }
@@ -1640,10 +1659,10 @@
             previous -= parseFloat($('#saved_invoice_due').val()) || 0;
          }
          var invoiceDues = net - totalPaid;
-         $('#summary_advance_amount').text(to_Fixed(advance));
-         $('#invoice_dues').text(to_Fixed(invoiceDues));
-         $('#previous_dues').text(to_Fixed(previous));
-         $('#current_dues').text(to_Fixed(invoiceDues + previous));
+         $('#summary_advance_amount').text(to_Fixed(cashCustomer ? 0 : advance));
+         $('#invoice_dues').text(to_Fixed(cashCustomer ? 0 : invoiceDues));
+         $('#previous_dues').text(to_Fixed(cashCustomer ? 0 : previous));
+         $('#current_dues').text(to_Fixed(cashCustomer ? 0 : (invoiceDues + previous)));
          var refund = Math.max(0, paid + savedPaid - net);
          var balance_due = Math.max(0, net - paid - savedPaid);
          $("#refund_amount").val(to_Fixed(refund));
@@ -1700,6 +1719,7 @@
 
       $(document).ready(function() {
          set_previous_due();
+         update_refund_amount();
       });
 
       // TASK-17: Cost Price popup (kept)
