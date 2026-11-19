@@ -212,10 +212,13 @@ class GstInvoice extends MyPDF{
             'Invoice Date' => $invoice_datetime,
             'Invoice Type' => $invoice_type,
             'Payment Type' => $payment_type,
-            'Card Type' => $card_type,
-            'Due Days' => $due_days !== null ? $due_days : '',
-            'Due Date' => $due_date,
         );
+        // Cash invoices: hide Card Type / Due Days / Due Date
+        if (strcasecmp(trim((string)$invoice_type), 'Cash') !== 0) {
+            $invoice_rows['Card Type'] = $card_type;
+            $invoice_rows['Due Days'] = $due_days !== null ? $due_days : '';
+            $invoice_rows['Due Date'] = $due_date;
+        }
         $invoice_details = $this->invoice_detail_table($invoice_rows, 30, 22); // block shifted right
         // Single outer box — no vertical divider between customer / invoice
         $customer_html = !empty($this->_customer_block_html) ? $this->_customer_block_html : '';
