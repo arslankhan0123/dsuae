@@ -620,7 +620,11 @@ class GstInvoice extends MyPDF{
 
 		$items_rows = $q2->result();
 		$is_pos_sale = (isset($sales->pos) && (int) $sales->pos === 1);
-		$invoice_level_discount = (float) (isset($sales->tot_discount_to_all_amt) ? $sales->tot_discount_to_all_amt : 0)
+		// tot_discount_to_all_amt already includes the row discounts (fixed invoice discount is distributed into rows on save),
+		// so only the part that is not already in the rows is distributed here.
+		$items_disc_total = 0.0;
+		foreach ($items_rows as $r_disc) { $items_disc_total += (float) $r_disc->discount_amt; }
+		$invoice_level_discount = max(0, (float) (isset($sales->tot_discount_to_all_amt) ? $sales->tot_discount_to_all_amt : 0) - $items_disc_total)
 			+ (float) (isset($sales->coupon_amt) ? $sales->coupon_amt : 0);
 		if ($is_pos_sale) {
 			$invoice_level_discount = (float) (isset($sales->tot_discount_to_all_amt) ? $sales->tot_discount_to_all_amt : 0);
@@ -760,7 +764,7 @@ class GstInvoice extends MyPDF{
 		// tot_discount_to_all_amt, so adding item discounts again duplicates them.
 		$invoice_discount_amt = (isset($sales->pos) && (int) $sales->pos === 1)
 			? (float) $sales->tot_discount_to_all_amt
-			: (float) $tot_discount_amt + (isset($sales->tot_discount_to_all_amt) ? (float) $sales->tot_discount_to_all_amt : 0) + (isset($sales->coupon_amt) ? (float) $sales->coupon_amt : 0);
+			: max((float) $tot_discount_amt, (isset($sales->tot_discount_to_all_amt) ? (float) $sales->tot_discount_to_all_amt : 0)) + (isset($sales->coupon_amt) ? (float) $sales->coupon_amt : 0);
 		$show_discount = ($invoice_discount_amt > 0);
 
 		$calc_subtotal = (float) $sub_total;
@@ -1014,7 +1018,7 @@ class GstInvoice extends MyPDF{
 		$totals_html .= '<tr>';
 		$totals_html .= '<td colspan="3" style="width:'.$col_left.'%;border-top:none;"><div style="font-size:12px;">';
 		if (show_number_to_words_sales()) {
-			$totals_html .= '<b>'.$this->CI->lang->line("amount_in_words").':</b> '.no_to_words($invoice_net_total);
+			$totals_html .= '<b>'.$this->CI->lang->line("amount_in_words").':</b> '.no_to_words(round((float) $invoice_net_total, 2)); // round first: 323.9999 must read as 324
 			$tot_expl = explode('.', store_number_format($invoice_net_total));
 			if (!empty($tot_expl[1])) {
 				$totals_html .= " and ". no_to_words($tot_expl[1]). " Fills";
@@ -1323,7 +1327,11 @@ class GstInvoice extends MyPDF{
 
 		$items_rows = $q2->result();
 		$is_pos_sale = (isset($sales->pos) && (int) $sales->pos === 1);
-		$invoice_level_discount = (float) (isset($sales->tot_discount_to_all_amt) ? $sales->tot_discount_to_all_amt : 0)
+		// tot_discount_to_all_amt already includes the row discounts (fixed invoice discount is distributed into rows on save),
+		// so only the part that is not already in the rows is distributed here.
+		$items_disc_total = 0.0;
+		foreach ($items_rows as $r_disc) { $items_disc_total += (float) $r_disc->discount_amt; }
+		$invoice_level_discount = max(0, (float) (isset($sales->tot_discount_to_all_amt) ? $sales->tot_discount_to_all_amt : 0) - $items_disc_total)
 			+ (float) (isset($sales->coupon_amt) ? $sales->coupon_amt : 0);
 		if ($is_pos_sale) {
 			$invoice_level_discount = (float) (isset($sales->tot_discount_to_all_amt) ? $sales->tot_discount_to_all_amt : 0);
@@ -1463,7 +1471,7 @@ class GstInvoice extends MyPDF{
 		// tot_discount_to_all_amt, so adding item discounts again duplicates them.
 		$invoice_discount_amt = (isset($sales->pos) && (int) $sales->pos === 1)
 			? (float) $sales->tot_discount_to_all_amt
-			: (float) $tot_discount_amt + (isset($sales->tot_discount_to_all_amt) ? (float) $sales->tot_discount_to_all_amt : 0) + (isset($sales->coupon_amt) ? (float) $sales->coupon_amt : 0);
+			: max((float) $tot_discount_amt, (isset($sales->tot_discount_to_all_amt) ? (float) $sales->tot_discount_to_all_amt : 0)) + (isset($sales->coupon_amt) ? (float) $sales->coupon_amt : 0);
 		$show_discount = ($invoice_discount_amt > 0);
 
 		$calc_subtotal = (float) $sub_total;
@@ -1717,7 +1725,7 @@ class GstInvoice extends MyPDF{
 		$totals_html .= '<tr>';
 		$totals_html .= '<td colspan="3" style="width:'.$col_left.'%;border-top:none;"><div style="font-size:12px;">';
 		if (show_number_to_words_sales()) {
-			$totals_html .= '<b>'.$this->CI->lang->line("amount_in_words").':</b> '.no_to_words($invoice_net_total);
+			$totals_html .= '<b>'.$this->CI->lang->line("amount_in_words").':</b> '.no_to_words(round((float) $invoice_net_total, 2)); // round first: 323.9999 must read as 324
 			$tot_expl = explode('.', store_number_format($invoice_net_total));
 			if (!empty($tot_expl[1])) {
 				$totals_html .= " and ". no_to_words($tot_expl[1]). " Fills";

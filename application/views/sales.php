@@ -1563,7 +1563,8 @@
             discount = parseFloat(discount) || 0;
             // Fixed invoice discounts are already distributed into the row discounts.
             discount = line_discount_sum + (did_apply_fixed_distribution ? 0 : discount);
-            taxable = amount_sum - discount - vat_sum + other_charges_total_amt - coupon_amt;
+            // Row amounts are already net of row discounts, so only subtract the part of the discount that is NOT in the rows.
+            taxable = amount_sum - (discount - line_discount_sum) - vat_sum + other_charges_total_amt - coupon_amt;
             if (taxable < 0) {
                taxable = 0;
             }
@@ -1590,7 +1591,7 @@
             var subtotal_round = round_off(net_before_round);
             var subtotal_diff = subtotal_round - net_before_round;
 
-            $("#subtotal_amt").html(to_Fixed(amount_sum));
+            $("#subtotal_amt").html(to_Fixed(amount_sum + line_discount_sum)); // subtotal before discount
             $("#other_charges_amt").html(to_Fixed(other_charges_total_amt));
             $("#coupon_discount_amt").html(to_Fixed(coupon_amt));
             $("#discount_to_all_amt").html(to_Fixed(discount));
