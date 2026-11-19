@@ -62,7 +62,7 @@
       @media (min-width: 768px) { #reference_no_col.remark-below-trn { clear: left; margin-top: 15px; } }
       #advance_amount:disabled { background-color: #eee; color: #555; cursor: not-allowed; opacity: 1; }
       .sales-footer-left .sales-send-options { background: transparent; padding: 0; margin: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
-      .sales-send-options > label { color: #000; font-weight: 600; margin-bottom: 0; }
+      .sales-send-options > label { color: #28ace2; font-weight: 600; margin-bottom: 0; } /* theme sky blue, same as footer bar */
       .sales-note-heading { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; }
       @media (max-width: 991px) {
          .sales-footer-left { display: block; }
