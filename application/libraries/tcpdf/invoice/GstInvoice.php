@@ -43,7 +43,7 @@ class GstInvoice extends MyPDF{
 		return '<nobr>' . htmlspecialchars((string)$en, ENT_QUOTES, 'UTF-8') . '</nobr>';
 	}
 
-	/** Give freed column width to unit/qty/rate/amount (not all to Part Name) */
+	/** Give freed column width (hidden Part No / Dis / VAT columns) to Part Name */
 	protected function _give_col_width(&$widthArray, $freed)
 	{
 		$freed = (float) $freed;
@@ -51,7 +51,7 @@ class GstInvoice extends MyPDF{
 			return;
 		}
 		$targets = array();
-		foreach (array('unit', 'qty', 'rate', 'amount', 'dis', 'tax') as $key) {
+		foreach (array() as $key) { // freed width goes to Part Name (description) only
 			if (isset($widthArray[$key])) {
 				$targets[] = $key;
 			}
@@ -503,23 +503,23 @@ class GstInvoice extends MyPDF{
 			: $this->_bi('Part No', 'Part No');
 		if ($pageWidth < 160) {
 			$widthArray = array(
-				'sl_no' 		=> '8',
+				'sl_no' 		=> '6',
 				'barcode' 		=> '11',
-				'description' 	=> '20',
+				'description' 	=> '24',
 				'unit' 			=> '8',
-				'qty' 			=> '9',
+				'qty' 			=> '8',
 				'rate' 	        => '11',
-				'dis'           => '10',
-				'tax'           => '10',
-				'amount' 		=> '13',
+				'dis'           => '9',
+				'tax'           => '11',
+				'amount' 		=> '12',
 			);
 		} else {
 			$widthArray = array(
-				'sl_no' 		=> '8',
+				'sl_no' 		=> '5',
 				'barcode' 		=> '12',
-				'description' 	=> '24',
-				'unit' 			=> '8',
-				'qty' 			=> '9',
+				'description' 	=> '29',
+				'unit' 			=> '7',
+				'qty' 			=> '8',
 				'rate' 	        => '10',
 				'dis'           => '8',
 				'tax'           => '10',
@@ -1206,23 +1206,23 @@ class GstInvoice extends MyPDF{
 			: $this->_bi('Part No', 'Part No');
 		if ($pageWidth < 160) {
 			$widthArray = array(
-				'sl_no' 		=> '8',
+				'sl_no' 		=> '6',
 				'barcode' 		=> '11',
-				'description' 	=> '20',
+				'description' 	=> '24',
 				'unit' 			=> '8',
-				'qty' 			=> '9',
+				'qty' 			=> '8',
 				'rate' 	        => '11',
-				'dis'           => '10',
-				'tax'           => '10',
-				'amount' 		=> '13',
+				'dis'           => '9',
+				'tax'           => '11',
+				'amount' 		=> '12',
 			);
 		} else {
 			$widthArray = array(
-				'sl_no' 		=> '8',
+				'sl_no' 		=> '5',
 				'barcode' 		=> '12',
-				'description' 	=> '24',
-				'unit' 			=> '8',
-				'qty' 			=> '9',
+				'description' 	=> '29',
+				'unit' 			=> '7',
+				'qty' 			=> '8',
 				'rate' 	        => '10',
 				'dis'           => '8',
 				'tax'           => '10',
