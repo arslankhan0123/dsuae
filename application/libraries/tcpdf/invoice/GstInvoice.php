@@ -68,11 +68,11 @@ class GstInvoice extends MyPDF{
 		}
 	}
 
-	protected function invoice_detail_table(array $rows, $label_width = 42) {
-        $value_width = 97 - $label_width;
+	protected function invoice_detail_table(array $rows, $label_width = 42, $left_pad = 0) {
+        $value_width = 97 - $label_width - $left_pad;
         $html = '<table border="0" cellpadding="0" cellspacing="0" style="width:100%;">';
         foreach ($rows as $label => $value) {
-            $html .= '<tr><td style="width:'.$label_width.'%;white-space:nowrap;"><b>'.htmlspecialchars($label, ENT_QUOTES, 'UTF-8').'</b></td>'
+            $html .= '<tr>'.($left_pad > 0 ? '<td style="width:'.$left_pad.'%;"></td>' : '').'<td style="width:'.$label_width.'%;white-space:nowrap;"><b>'.htmlspecialchars($label, ENT_QUOTES, 'UTF-8').'</b></td>'
                 . '<td style="width:3%;"><b>:</b></td>'
                 . '<td style="width:'.$value_width.'%;">'.nl2br(htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8')).'</td></tr>';
         }
@@ -118,7 +118,7 @@ class GstInvoice extends MyPDF{
         $customer_rows['Address'] = !empty($sales->address) ? $sales->address : $customer->address;
         $customer_rows['Salesperson'] = $salesperson_name;
         $customer_rows['Remark'] = isset($sales->reference_no) ? $sales->reference_no : '';
-        $customer_details = $this->invoice_detail_table($customer_rows);
+        $customer_details = $this->invoice_detail_table($customer_rows, 28); // colon + values closer to labels
         // Drawn later as one combined box in _get_invoice_details()
         $this->_customer_block_html = $customer_details;
         
@@ -216,7 +216,7 @@ class GstInvoice extends MyPDF{
             'Due Days' => $due_days !== null ? $due_days : '',
             'Due Date' => $due_date,
         );
-        $invoice_details = $this->invoice_detail_table($invoice_rows, 42);
+        $invoice_details = $this->invoice_detail_table($invoice_rows, 30, 22); // block shifted right
         // Single outer box — no vertical divider between customer / invoice
         $customer_html = !empty($this->_customer_block_html) ? $this->_customer_block_html : '';
         $cust_pct = round($ratio_cust * 100, 2);

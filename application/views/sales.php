@@ -58,6 +58,8 @@
       .sales-footer-advance > .col-sm-12 > label { margin: 0 !important; }
       .sales-advance-input { flex: 1 0 100px; max-width: 140px; }
       #advance_amount { background-color: #fff; color: #555; }
+      /* Remark sits under Customer TRN when TRN is shown; otherwise it joins the Address/Salesperson row */
+      @media (min-width: 768px) { #reference_no_col.remark-below-trn { clear: left; margin-top: 15px; } }
       #advance_amount:disabled { background-color: #eee; color: #555; cursor: not-allowed; opacity: 1; }
       .sales-footer-left .sales-send-options { background: transparent; padding: 0; margin: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
       .sales-send-options > label { color: #000; font-weight: 600; margin-bottom: 0; }
@@ -573,7 +575,7 @@
                         </div>
 
                         <div class="form-group">
-                           <div class="col-sm-4">
+                           <div class="col-sm-4" id="customer_trn_no_col" style="<?= $show_customer_trn ? '' : 'display:none;' ?>">
                               <div id="customer_trn_no_label" style="<?= $show_customer_trn ? '' : 'display:none;' ?>">
                                  <label for="customer_trn_no" >Customer TRN</label>
                               </div>
@@ -593,8 +595,7 @@
                                  <?= get_salesmans_select_list($salesman_id, $store_id); ?>
                               </select>
                            </div>
-</div><div class="form-group">
-<div class="col-sm-4">
+<div class="col-sm-4<?= $show_customer_trn ? ' remark-below-trn' : '' ?>" id="reference_no_col">
                               <label for="reference_no">Remark</label>
                               <input type="text" value="<?php echo  $reference_no; ?>" class="form-control " id="reference_no" name="reference_no" placeholder="">
                               <span id="reference_no_msg" style="display:none" class="text-danger"></span>
@@ -1144,9 +1145,9 @@
          }
          // If TRN is not null then show (same as previous task requirement)
          if (current_trn !== '' || branch_trn_enabled) {
-            $("#customer_trn_no_label, #customer_trn_no_wrap").show();
+            $("#customer_trn_no_col, #customer_trn_no_label, #customer_trn_no_wrap").show(); $("#reference_no_col").addClass("remark-below-trn");
          } else {
-            $("#customer_trn_no_label, #customer_trn_no_wrap").hide();
+            $("#customer_trn_no_col, #customer_trn_no_label, #customer_trn_no_wrap").hide(); $("#reference_no_col").removeClass("remark-below-trn");
          }
          if (typeof final_total === 'function') {
             final_total();
@@ -1155,7 +1156,7 @@
       $(document).on('keyup change', '#customer_trn_no', function() {
          var trn = ($(this).val() || '').toString().trim();
          if (trn !== '' || branch_trn_enabled) {
-            $("#customer_trn_no_label, #customer_trn_no_wrap").show();
+            $("#customer_trn_no_col, #customer_trn_no_label, #customer_trn_no_wrap").show(); $("#reference_no_col").addClass("remark-below-trn");
          }
          if (typeof final_total === 'function') {
             final_total();
@@ -1164,9 +1165,9 @@
       $(document).on('blur', '#customer_trn_no', function() {
          var trn = ($(this).val() || '').toString().trim();
          if (trn !== '' || branch_trn_enabled) {
-            $("#customer_trn_no_label, #customer_trn_no_wrap").show();
+            $("#customer_trn_no_col, #customer_trn_no_label, #customer_trn_no_wrap").show(); $("#reference_no_col").addClass("remark-below-trn");
          } else {
-            $("#customer_trn_no_label, #customer_trn_no_wrap").hide();
+            $("#customer_trn_no_col, #customer_trn_no_label, #customer_trn_no_wrap").hide(); $("#reference_no_col").removeClass("remark-below-trn");
          }
          if (typeof final_total === 'function') {
             final_total();
