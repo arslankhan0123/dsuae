@@ -1149,7 +1149,8 @@ class Sales_model extends CI_Model {
 							'item_tax_amt' 				=> $res1->tax_amt, 
 							'item_discount' 			=> $res1->discount_amt, 
 							'item_discount_type' 		=> $res1->discount_type, 
-							'item_discount_input' 		=> $res1->discount_input, 
+							// Fixed discount: per-unit value from the saved line amount (full precision) so edit re-opens with the exact saved discount
+							'item_discount_input' 		=> (strcasecmp((string)$res1->discount_type, 'Percentage') !== 0 && (float)$res1->sales_qty > 0) ? ((float)$res1->discount_amt / (float)$res1->sales_qty) : $res1->discount_input, 
 							'service_bit' 				=> $res2->service_bit, 
 							'custom_barcode' 			=> $res2->custom_barcode,
                             'item_image' => $res2->item_image,
@@ -1273,7 +1274,7 @@ class Sales_model extends CI_Model {
                <input type="hidden" id="service_bit_<?=$rowcount;?>" name="service_bit_<?=$rowcount;?>" value="<?=$service_bit;?>">
 
                <input type="hidden" id="item_discount_type_<?=$rowcount;?>" name="item_discount_type_<?=$rowcount;?>" value="<?=$item_discount_type;?>">
-               <input type="hidden" id="item_discount_input_<?=$rowcount;?>" name="item_discount_input_<?=$rowcount;?>" value="<?=store_number_format($item_discount_input,0);?>">
+               <input type="hidden" id="item_discount_input_<?=$rowcount;?>" name="item_discount_input_<?=$rowcount;?>" value="<?= (strcasecmp((string)$item_discount_type, 'Percentage') === 0) ? store_number_format($item_discount_input,0) : round((float)$item_discount_input, 8); ?>">
             </tr>
 		<?php
 

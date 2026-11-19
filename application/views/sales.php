@@ -1400,7 +1400,9 @@
             if (typeof STORE_TAX_ENABLED !== 'undefined' && !STORE_TAX_ENABLED) {
                line_vat = 0;
             }
-            var line_subtotal = Math.max(0, line_total - line_vat);
+            // Share by gross line value (qty x price) so the split does not drift each time totals are recalculated
+            var line_price = parseFloat($("#td_data_" + i + "_10").val());
+            var line_subtotal = (!isNaN(line_price) && line_price > 0) ? (qty * line_price) : Math.max(0, line_total - line_vat);
             if (line_subtotal > 0) {
                rows.push({
                   row_id: i,
@@ -1427,7 +1429,7 @@
             }
             var unit_discount = (row.qty > 0) ? (row_discount / row.qty) : 0;
             $("#item_discount_type_" + row.row_id).val('Fixed');
-            $("#item_discount_input_" + row.row_id).val(to_Fixed(unit_discount));
+            $("#item_discount_input_" + row.row_id).val(unit_discount); // keep full precision: rounding the per-unit value made the rows add up to more than the discount entered
             $("#td_data_" + row.row_id + "_8").val(to_Fixed(row_discount));
             distributed_total += row_discount;
             calculate_tax(row.row_id);

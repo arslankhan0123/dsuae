@@ -312,9 +312,10 @@
       ? (($amount_sum - $vat_sum + $other_charges_input - $coupon_amt) * (float)$discount_to_all_input / 100)
       : (($line_discount_sum > 0) ? 0 : (float)$discount_to_all_input);
     $summary_discount = $line_discount_sum + $invoice_discount;
-    $taxable = $amount_sum - $summary_discount - $vat_sum + $other_charges_amt - $coupon_amt;
+    // Row amounts are already net of row discounts: subtract only the invoice-level part here
+    $taxable = $amount_sum - $invoice_discount - $vat_sum + $other_charges_amt - $coupon_amt;
     if ($taxable < 0) { $taxable = 0; }
-    $display_subtotal = $amount_sum;
+    $display_subtotal = $amount_sum + $line_discount_sum; // subtotal before discount (same as add/edit)
     $display_vat = $show_tax ? $vat_sum : 0;
     // Same as add page final_total(): Net = taxable + VAT (when branch tax on)
     $display_net = $show_tax ? ($taxable + $display_vat) : $taxable;

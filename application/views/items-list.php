@@ -177,7 +177,7 @@
                   <th><?= $this->lang->line('unit'); ?></th>
                   <th><?= $this->lang->line('stock'); ?></th>
                   <th>Opening Stock</th>
-                  <th><?= $this->lang->line('alert_quantity'); ?></th>
+                  <th>Cost Price</th>
                   <th><?= $this->lang->line('sales_price'); ?></th>
                   <th>VAT</th>
  	         	  	  <th><?= $this->lang->line('status'); ?></th>
