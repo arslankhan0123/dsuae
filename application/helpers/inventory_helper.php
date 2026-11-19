@@ -24,6 +24,8 @@
  }
   function get_styles_select_list($select_id='',$store_id=''){
  	  $CI =& get_instance();
+	  // Styles table not installed in this database: show an empty list instead of breaking the page
+	  if(!$CI->db->table_exists('db_styles')){ return '<option value="">No Records Found</option>'; }
 
 	   $store_id = (!empty($store_id)) ? $store_id : get_current_store_id();
 

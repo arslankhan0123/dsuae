@@ -58,6 +58,10 @@ class Items_model extends CI_Model {
 	public function __construct()
 	{
 		parent::__construct();
+		// Item 'Style' column: add it when the database does not have it yet (item edit/save read and write style_id)
+		if (!$this->db->field_exists('style_id', 'db_items')) {
+			$this->db->query("ALTER TABLE `db_items` ADD `style_id` INT(11) NULL DEFAULT NULL");
+		}
 	}
 	
 	private function _get_datatables_query()
@@ -631,7 +635,7 @@ class Items_model extends CI_Model {
 			$data['item_name']=$query->item_name;
 			$data['item_name_arabic']=!empty($query->item_name_arabic) ? $query->item_name_arabic : '';
 			$data['brand_id']=$query->brand_id;
-			$data['style_id']=$query->style_id;
+			$data['style_id']=isset($query->style_id) ? $query->style_id : '';
 			$data['category_id']=$query->category_id;
 			$data['sku']=$query->sku;
 			$data['hsn']=$query->hsn;
