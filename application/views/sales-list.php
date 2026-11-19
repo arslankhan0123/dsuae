@@ -344,8 +344,6 @@ $sales_due_total = $this->db->select("COALESCE(SUM(sales_due),0) AS sales_due")-
                     </div>
                   </div>
 
-                  <input type="hidden" id="filter_salesman_id" value="">
-
                   <div class="col-md-4">
                     <div class="form-group">
                        <label for="sales_from_date"><?=$this->lang->line('from_date');?> </label>
@@ -381,6 +379,16 @@ $sales_due_total = $this->db->select("COALESCE(SUM(sales_due),0) AS sales_due")-
                          <option value="wholesale">Wholesale</option>
                        </select>
                        <span id="sales_type_msg" style="display:none" class="text-danger"></span>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <div class="form-group">
+                       <label for="filter_salesman_id">Salesperson</label>
+                       <select class="form-control select2" id="filter_salesman_id" name="filter_salesman_id" style="width: 100%;">
+                         <option value="">All</option>
+                         <?= get_salesmans_select_list('', get_current_store_id()); ?>
+                       </select>
                     </div>
                   </div>
 
