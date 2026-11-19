@@ -581,7 +581,7 @@ class MyPDF extends TCPDF {
         // Generate (left) + Page (right) — sit in the gap above the address line
         if ($has_gen) {
             $usable = $pageWidth - $this->lMargin - $this->rMargin;
-            $this->setY(-24);
+            $this->setY(-19.5); // clear of the signature box above and the address line below
             $this->SetFont($this->get_font_name(), '', $side_fs);
             // Generate the alias after selecting its rendering font (Unicode-aware).
             $page_txt = 'Page ' . $this->getPage() . ' of ' . $this->getAliasNbPages();

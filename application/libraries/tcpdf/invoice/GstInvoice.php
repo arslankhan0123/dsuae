@@ -355,8 +355,9 @@ class GstInvoice extends MyPDF{
     // Generate (left) + Page (right) rendered by MyPDF::Footer just above address line
     public function Footer()
     {
-		$gen_date = !empty($this->sales->sales_date) ? show_date($this->sales->sales_date) : '';
-		$gen_time = !empty($this->sales->created_time) ? strtoupper(date('g:i A', strtotime($this->sales->created_time))) : '';
+		// PDF generate date/time (current), not the invoice date
+		$gen_date = show_date(date('Y-m-d'));
+		$gen_time = strtoupper(date('g:i A'));
 		$this->footer_generate_text = 'Generate: ' . trim($gen_date . ($gen_time !== '' ? ' '.$gen_time : ''));
 
         parent::Footer();
