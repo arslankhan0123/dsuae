@@ -617,14 +617,14 @@ class MyPDF extends TCPDF {
         $line_esc = htmlspecialchars($line, ENT_QUOTES, 'UTF-8');
         $lineGray = '#AAAAAA';
         $html = '<div style="border-top:1.5px solid '.$lineGray.';padding-top:5px;font-family:dejavusans;">'
-              . '<div style="font-size:12pt;color:'.$textBlack.';line-height:1.4;text-align:left;">'
+              . '<div style="font-size:12pt;color:'.$textBlack.';line-height:1.4;text-align:center;">'
               . $pinIcon.'&nbsp;'.$line_esc
               . '</div></div>';
 
         $this->setY(-14);
         $this->setFont('dejavusans', '', 8, '', true);
         $this->setCellPadding(0);
-        $this->writeHTMLCell(0, 0, $this->lMargin, $this->GetY(), $html, 0, 0, false, true, 'L', true);
+        $this->writeHTMLCell(0, 0, $this->lMargin, $this->GetY(), $html, 0, 0, false, true, 'C', true);
     }
 
     // set document information
