@@ -601,6 +601,11 @@ $CI = &get_instance();
         <?php } ?>
       <?php } ?><!-- is_user() -->
 
+      <?php if (!is_user() && $CI->permissions('accounts_view')) { ?>
+        <!-- Day Book: top-level link directly below Accounts -->
+        <li class="day_book-active-li"><a href="<?php echo $base_url; ?>accounts/day_book"><i class="fa fa-book text-aqua"></i> <span>Day Book</span></a></li>
+      <?php } ?>
+
       <?php if (!is_user()) { ?>
         <?php if ($CI->permissions('services_add') || $CI->permissions('services_view') || $CI->permissions('items_add') || $CI->permissions('items_view') || $CI->permissions('items_category_add') || $CI->permissions('items_category_view') || $CI->permissions('brand_add') || $CI->permissions('brand_view') || $CI->permissions('print_labels') || $CI->permissions('import_items') || $CI->permissions('import_services') || $CI->permissions('variant_view') || $CI->permissions('services_view')) { ?>
           <!-- <li class="header">MAIN</li> -->
