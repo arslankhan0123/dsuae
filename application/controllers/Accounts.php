@@ -68,72 +68,10 @@ class Accounts extends MY_Controller {
 		$this->permission_check('accounts_view');
 		$this->load->model('day_book_model','day_book');
 		$date=$this->day_book->clean_date($this->input->get('date'));
-		$d=$this->day_book->get_summary($date);
-
-		$f=function($v){ return store_number_format($v); };
-		$row=function($label,$value,$bold=false){
-			$b1=$bold ? '<b>' : ''; $b2=$bold ? '</b>' : '';
-			return '<tr><td width="62%">'.$b1.$label.$b2.'</td><td width="38%" align="right">'.$b1.$value.$b2.'</td></tr>';
-		};
-		$block=function($title,$rows){
-			return '<h3 style="color:#1a9fe0;">'.$title.'</h3><table cellpadding="4" border="0" style="border-bottom:1px solid #dddddd;">'.$rows.'</table><br/>';
-		};
-
-		$s=$d['sales']; $pu=$d['purchase']; $c=$d['cash'];
-		$html='<h1>Day Book</h1><div>Date: '.show_date($date).'</div><br/>';
-
-		$html.=$block('Sales Summary',
-			$row('Gross Sales',$f($s['gross'])).
-			$row('Sales Discount','- '.$f($s['discount'])).
-			$row('Sales Returns','- '.$f($s['returns'])).
-			$row('Net Sales excl. VAT',$f($s['net_excl']),true).
-			$row($s['vat_label'],'+ '.$f($s['vat'])).
-			$row('Net Sales (incl. VAT)',$f($s['net_incl']),true));
-
-		$html.=$block('Purchase Summary',
-			$row('Gross Purchase',$f($pu['gross'])).
-			$row('Purchase Discount','- '.$f($pu['discount'])).
-			$row('Purchase Returns','- '.$f($pu['returns'])).
-			$row('Net Purchase excl. VAT',$f($pu['net_excl']),true).
-			$row($pu['vat_label'],'+ '.$f($pu['vat'])).
-			$row('Net Purchase (incl. VAT)',$f($pu['net_incl']),true));
-
-		$diff=$c['counted']-$c['expected'];
-		$diff_label='Cash Difference'.($diff<0 ? ' (short)' : ($diff>0 ? ' (over)' : ''));
-		$html.=$block('Cash Reconciliation',
-			$row('Opening Cash',$f($c['opening'])).
-			$row('Cash Sales','+ '.$f($c['sales'])).
-			$row('Cash Refunds','- '.$f($c['refunds'])).
-			$row('Cash Paid Out','- '.$f($c['paid_out'])).
-			$row('Expected Cash in Drawer',$f($c['expected']),true).
-			$row('Actual Cash Counted',$f($c['counted']),true).
-			$row($diff_label,$f($diff),true));
-
-		$pay_rows='';
-		foreach($d['payments'] as $pay){ $pay_rows.=$row(html_escape($pay['label']),$f($pay['amount'])); }
-		$pay_rows.=$row('On Account (credit)',$f($d['on_account']));
-		$pay_rows.=$row('Total Received',$f($d['payment_total']),true);
-		$html.=$block('Payment Summary',$pay_rows);
-
-		$den='<tr style="background-color:#f2f6fa;"><td width="40%"><b>Denomination</b></td><td width="20%" align="right"><b>Qty</b></td><td width="40%" align="right"><b>Subtotal</b></td></tr>';
-		foreach($d['notes'] as $n){ $q=(int)$d['counts']['notes'][$n]; $den.='<tr><td>'.number_format((float)$n).'</td><td align="right">'.$q.'</td><td align="right">'.$f($q*(float)$n).'</td></tr>'; }
-		foreach($d['coins'] as $cn){ $q=(int)$d['counts']['coins'][$cn]; $den.='<tr><td>'.$cn.'</td><td align="right">'.$q.'</td><td align="right">'.$f($q*(float)$cn).'</td></tr>'; }
-		$den.='<tr><td colspan="2"><b>Total Counted</b></td><td align="right"><b>'.$f($c['counted']).'</b></td></tr>';
-		$html.='<h3 style="color:#1a9fe0;">Denomination Count</h3><table cellpadding="4" border="0">'.$den.'</table>';
-
-		require_once(APPPATH.'libraries/tcpdf/tcpdf.php');
-		$pdf=new TCPDF('P','mm','A4',true,'UTF-8',false);
-		$pdf->SetCreator('Day Book');
-		$pdf->SetTitle('Day Book '.$date);
-		$pdf->setPrintHeader(false);
-		$pdf->setPrintFooter(false);
-		$pdf->SetMargins(12,12,12);
-		$pdf->SetAutoPageBreak(true,12);
-		$pdf->AddPage();
-		$pdf->SetFont('dejavusans','',9);
-		$pdf->writeHTML($html,true,false,true,false,'');
-		if(ob_get_length()){ @ob_end_clean(); }
-		$pdf->Output('day-book-'.$date.'.pdf','I');
+		$params=array('date'=>$date,'data'=>$this->day_book->get_summary($date));
+		// Same header / title band / tables / footer as the sales invoice PDF
+		$this->load->library('tcpdf/invoice/DayBookPdf',$params);
+		$this->daybookpdf->show_pdf();
 	}
 
 	public function add()
