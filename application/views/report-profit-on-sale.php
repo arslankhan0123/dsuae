@@ -125,6 +125,7 @@
                                     <th style="text-align: right;">Cost of Goods Sold</th>
                                     <th style="text-align: right;">Gross Profit</th>
                                     <th style="text-align: right;">Gross Profit Margin %</th>
+                                    <th class="noExl" style="text-align: center;">Action</th>
                                  </tr>
                               </thead>
                               <tbody id="tbodyid">

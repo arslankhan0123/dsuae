@@ -480,6 +480,12 @@ class Reports_model extends CI_Model {
 				echo "<td class='text-right'>" . store_number_format($cost_amount) . "</td>";
 				echo "<td class='text-right text-bold'>" . store_number_format($gross_profit) . "</td>";
 				echo "<td class='text-right'>" . store_number_format($profit_margin) . "</td>";
+				// Action: View opens the sales invoice details (new tab, so the report stays open)
+				if($res1->store_id == get_current_store_id() || is_admin()){
+					echo "<td class='text-center noExl'><a class='btn btn-xs btn-info' target='_blank' title='View Invoice' href='" . base_url("sales/invoice/$res1->id") . "'><i class='fa fa-eye'></i> View</a></td>";
+				} else {
+					echo "<td class='noExl'></td>";
+				}
 				echo "</tr>";
 
 				$unique_invoices[$res1->sales_code] = true;
@@ -508,10 +514,11 @@ class Reports_model extends CI_Model {
 					  <td style='".$total_style."'>" . store_number_format($tot_cost_amount) . "</td>
 					  <td style='".$total_style."'>" . store_number_format($tot_gross_profit) . "</td>
 					  <td style='".$total_style."'>" . store_number_format($tot_profit_margin) . "</td>
+					  <td class='noExl'></td>
 				  </tr>";
 		} else {
 			echo "<tr>";
-			echo "<td class='text-center text-danger' colspan='10'>No Records Found</td>";
+			echo "<td class='text-center text-danger' colspan='11'>No Records Found</td>";
 			echo "</tr>";
 		}
 		exit;
