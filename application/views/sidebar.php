@@ -869,7 +869,8 @@ $CI = &get_instance();
             <?php if ($CI->permissions('sales_report')) { ?>
               <li class="report-sales-active-li"><a href="<?php echo $base_url; ?>reports/sales"><i class="fa fa-files-o "></i> <span><?= $this->lang->line('sales_report'); ?></span></a></li>
               <li class="report-profit-on-sale-active-li"><a href="<?php echo $base_url; ?>reports/profit_on_sale"><i class="fa fa-line-chart"></i> <span><?= $this->lang->line('profit_on_sale_report'); ?></span></a></li>
-              <li class="report-sales-profit-active-li"><a href="<?php echo $base_url; ?>reports/sales_profit"><i class="fa fa-line-chart"></i> <span>Profit Report</span></a></li>
+              <?php /* Profit Report hidden (not needed) -- remove this PHP comment to show it again
+              <li class="report-sales-profit-active-li"><a href="<?php echo $base_url; ?>reports/sales_profit"><i class="fa fa-line-chart"></i> <span>Profit Report</span></a></li> */ ?>
               <li class="report-void-logs-active-li"><a href="<?php echo $base_url; ?>reports/void_logs"><i class="fa fa-ban"></i> <span>Void Logs Report</span></a></li>
             <?php } ?>
             <?php if ($CI->permissions('sales_return_report')) { ?>
