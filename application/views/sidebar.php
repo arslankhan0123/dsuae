@@ -561,7 +561,7 @@ $CI = &get_instance();
       <?php if (!is_user()) { ?>
         <?php if (($CI->permissions('accounts_add') || $CI->permissions('accounts_view') || $CI->permissions('journal_add') || $CI->permissions('journal_view')) && accounts_module()) { ?>
           <!-- <li class="header">ACCOUNTING</li> -->
-          <li class="accounts_list-active-li accounts-active-li journal-active-li journal_list-active-li money_transfer-active-li money_transfer_list-active-li money_deposit-active-li money_deposit_list-active-li cash_transactions-active-li bank_master-active-li bank_master_list-active-li treeview">
+          <li class="accounts_list-active-li accounts-active-li journal-active-li journal_list-active-li money_transfer-active-li money_transfer_list-active-li money_deposit-active-li money_deposit_list-active-li cash_transactions-active-li bank_master-active-li bank_master_list-active-li opening_cash-active-li treeview">
             <a href="#">
               <i class="fa fa-th-large text-aqua"></i> <span><?= $this->lang->line('accounts'); ?></span>
               <span class="pull-right-container">
@@ -594,6 +594,10 @@ $CI = &get_instance();
 
               <?php if ($CI->permissions('accounts_view')) { ?>
                 <li class="bank_master_list-active-li bank_master-active-li"><a href="<?php echo $base_url; ?>bank_master"><i class="fa fa-university "></i> <span><?= (!empty($this->lang->line('bank_master'))) ? $this->lang->line('bank_master') : 'Bank Master'; ?></span></a></li>
+              <?php } ?>
+
+              <?php if ($CI->permissions('accounts_view')) { ?>
+                <li class="opening_cash-active-li"><a href="<?php echo $base_url; ?>accounts/opening_cash"><i class="fa fa-money "></i> <span>Opening Cash</span></a></li>
               <?php } ?>
 
             </ul>

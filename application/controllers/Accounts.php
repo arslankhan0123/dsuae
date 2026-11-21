@@ -32,6 +32,59 @@ class Accounts extends MY_Controller {
 		$this->load->view('accounts/cash_transactions',$data);
 	}
 
+	/* ---------------- Opening Cash ---------------- */
+	public function opening_cash()
+	{
+		$this->permission_check('accounts_view');
+		$data=$this->data;
+		$data['page_title']='Opening Cash';
+		$this->load->model('opening_cash_model','opening_cash');
+		$this->load->view('accounts/opening_cash',$data);
+	}
+
+	// List for the Opening Cash table (JSON)
+	public function opening_cash_list()
+	{
+		header('Content-Type: application/json');
+		if(!$this->permissions('accounts_view')){
+			echo json_encode(array());
+			return;
+		}
+		$this->load->model('opening_cash_model','opening_cash');
+		echo json_encode($this->opening_cash->get_list());
+	}
+
+	// Save a new entry, or update one when an id is posted
+	public function opening_cash_save()
+	{
+		if(!$this->permissions('accounts_view')){
+			echo "You do not have permission to save Opening Cash.";
+			return;
+		}
+		$raw_date=trim((string)$this->input->post('opening_date'));
+		$raw_amount=str_replace(',','',trim((string)$this->input->post('amount')));
+		if($raw_date==='' || strtotime(str_replace('/','-',$raw_date))===false){
+			echo "Please select a valid Date.";
+			return;
+		}
+		if($raw_amount==='' || !is_numeric($raw_amount) || (float)$raw_amount<0){
+			echo "Please enter a valid Amount.";
+			return;
+		}
+		$this->load->model('opening_cash_model','opening_cash');
+		echo $this->opening_cash->save((int)$this->input->post('id'), system_fromatted_date($raw_date), round((float)$raw_amount,2));
+	}
+
+	public function opening_cash_delete()
+	{
+		if(!$this->permissions('accounts_view')){
+			echo "failed";
+			return;
+		}
+		$this->load->model('opening_cash_model','opening_cash');
+		echo $this->opening_cash->delete((int)$this->input->post('id'));
+	}
+
 	/* ---------------- Day Book ---------------- */
 	public function day_book()
 	{

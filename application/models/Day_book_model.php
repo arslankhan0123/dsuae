@@ -169,6 +169,13 @@ class Day_book_model extends CI_Model {
 
 		// Opening cash = cash counted in the most recent saved declaration before this date
 		$opening = $this->val("SELECT total_counted AS v FROM db_daybook_cash WHERE store_id=? AND declaration_date<? ORDER BY declaration_date DESC LIMIT 1", $p);
+		// If Opening Cash was entered for this date (Accounts > Opening Cash), that amount is used instead
+		if ($this->db->table_exists('db_opening_cash')) {
+			$oc = $this->db->query("SELECT COUNT(*) AS c, COALESCE(SUM(amount),0) AS v FROM db_opening_cash WHERE store_id=? AND opening_date=?", $p)->row();
+			if (!empty($oc) && (int) $oc->c > 0) {
+				$opening = (float) $oc->v;
+			}
+		}
 		$expected = $opening + $cash_sales - $cash_refunds - $cash_paid_out;
 
 		/* ---------------- Saved declaration ---------------- */
