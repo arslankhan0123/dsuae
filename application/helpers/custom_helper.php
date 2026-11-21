@@ -2213,26 +2213,19 @@
       return '';
     }
 
-    $formatted_datetime = !empty($invoice_datetime) ? date('Y-m-d\TH:i:s\Z', strtotime($invoice_datetime)) : date('Y-m-d\TH:i:s\Z');
+    // Same data and format as the rapidsma_ksa invoices (salla/zatca): TLV tags 1-5, Base64 encoded.
+    // Tag 3 is the invoice date as YYYY-MM-DD.
+    $formatted_date = !empty($invoice_datetime) ? date('Y-m-d', strtotime($invoice_datetime)) : date('Y-m-d');
 
-    // Clean and validate 15-digit ZATCA VAT / TRN number (must be 15 digits starting and ending with 3)
+    // Tag 2 is the store's own TRN / VAT number exactly as saved in the branch settings (digits only).
+    // It must never be replaced by a made-up number.
     $clean_vat = preg_replace('/[^0-9]/', '', (string)$vat_number);
-    if (strlen($clean_vat) !== 15 || $clean_vat[0] !== '3' || substr($clean_vat, -1) !== '3') {
-      if (!empty($clean_vat) && strlen($clean_vat) <= 15) {
-        $clean_vat = '3' . str_pad($clean_vat, 13, '0', STR_PAD_RIGHT) . '3';
-        $clean_vat = substr($clean_vat, 0, 15);
-        $clean_vat[0] = '3';
-        $clean_vat[14] = '3';
-      } else {
-        $clean_vat = '311371213800003';
-      }
-    }
 
     $tlv = get_zatca_tlv_tag(1, $seller_name)
          . get_zatca_tlv_tag(2, $clean_vat)
-         . get_zatca_tlv_tag(3, $formatted_datetime)
-         . get_zatca_tlv_tag(4, (string)round((float)$total_amount, 2))
-         . get_zatca_tlv_tag(5, (string)round((float)$tax_amount, 2));
+         . get_zatca_tlv_tag(3, $formatted_date)
+         . get_zatca_tlv_tag(4, number_format((float)$total_amount, 2, '.', ''))
+         . get_zatca_tlv_tag(5, number_format((float)$tax_amount, 2, '.', ''));
 
     $base64_tlv = base64_encode($tlv);
 
@@ -2242,7 +2235,7 @@
         require_once($tcpdf_barcodes_file);
       }
       try {
-        $barcode = new TCPDF2DBarcode($base64_tlv, 'QRCODE,L');
+        $barcode = new TCPDF2DBarcode($base64_tlv, 'QRCODE,M');
         $pngData = $barcode->getBarcodePngData($pixel_w, $pixel_h);
         if (!empty($pngData)) {
           if (function_exists('imagecreatefromstring') && function_exists('imagecreatetruecolor')) {
