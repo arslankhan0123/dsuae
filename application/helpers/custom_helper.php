@@ -529,6 +529,10 @@
   function is_pdf_part_number_popup_enabled($store_id=null){
     $CI =& get_instance();
     ensure_pdf_part_number_popup_setting();
+    // Item Label = Barcode No: the Barcode No column always shows on PDFs, so no With/Without popup
+    if(get_item_barcode_label_key($store_id) === 'barcode_no'){
+      return false;
+    }
     $store_id = empty($store_id) ? get_current_store_id() : (int)$store_id;
     $row = $CI->db->select('pdf_part_number_popup')->where('id',$store_id)->get('db_store')->row();
     if(empty($row) || !isset($row->pdf_part_number_popup)){

@@ -615,7 +615,7 @@
                                                     $pdf_part_number_popup = 1;
                                                   }
                                                 ?>
-                                                <div class="form-group">
+                                                <div class="form-group" id="pdf_part_number_popup_row" style="<?= ($item_barcode_label==='barcode_no') ? 'display:none;' : ''; ?>">
                                                    <label for="pdf_part_number_popup" class="col-sm-4 control-label">PDF Popup</label>
                                                    <div class="col-sm-8">
                                                       <select class="form-control select2" id="pdf_part_number_popup" name="pdf_part_number_popup" style="width: 100%;">
@@ -1232,6 +1232,18 @@
           //bootstrap WYSIHTML5 - text editor
          // $("#invoice_terms").wysihtml5()
         })
+      </script>
+
+      <script>
+        // Item Label = Barcode No: the Barcode No column always shows on PDFs, so the PDF Popup setting is hidden
+        $(function () {
+          function toggle_pdf_popup_row() {
+            var is_barcode = $('#item_barcode_label_barcode_no').is(':checked');
+            $('#pdf_part_number_popup_row').toggle(!is_barcode);
+          }
+          $('input[name="item_barcode_label"]').on('change ifChecked ifChanged', toggle_pdf_popup_row);
+          toggle_pdf_popup_row();
+        });
       </script>
 
    </body>

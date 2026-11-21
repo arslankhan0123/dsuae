@@ -483,7 +483,8 @@ class GstInvoice extends MyPDF{
 
 		$pageWidth = $this->getPageWidth();
 		$item_font_size = ($pageWidth < 160) ? 8 : 12;
-		$with_part_number = !empty($this->with_part_number);
+		// Barcode No label enabled in branch settings => the Barcode No column always shows (after S/N)
+		$with_part_number = !empty($this->with_part_number) || (get_item_barcode_label_key(!empty($this->store->id) ? $this->store->id : null) === 'barcode_no');
 		// Show VAT column + Taxable/VAT summary when store TRN enabled (TAX INVOICE)
 		$show_tax = is_branch_tax_enabled(!empty($store->id) ? $store->id : '');
 		$show_vat_summary = $show_tax;
@@ -504,11 +505,11 @@ class GstInvoice extends MyPDF{
 		if ($pageWidth < 160) {
 			$widthArray = array(
 				'sl_no' 		=> '6',
-				'barcode' 		=> '11',
-				'description' 	=> '24',
+				'barcode' 		=> '13',
+				'description' 	=> '23.5',
 				'unit' 			=> '8',
 				'qty' 			=> '8',
-				'rate' 	        => '11',
+				'rate' 	        => '9.5',
 				'dis'           => '9',
 				'tax'           => '11',
 				'amount' 		=> '12',
@@ -516,11 +517,11 @@ class GstInvoice extends MyPDF{
 		} else {
 			$widthArray = array(
 				'sl_no' 		=> '5',
-				'barcode' 		=> '12',
-				'description' 	=> '29',
+				'barcode' 		=> '14',
+				'description' 	=> '28.5',
 				'unit' 			=> '7',
 				'qty' 			=> '8',
-				'rate' 	        => '10',
+				'rate' 	        => '8.5',
 				'dis'           => '8',
 				'tax'           => '10',
 				'amount' 		=> '11',
@@ -1190,7 +1191,8 @@ class GstInvoice extends MyPDF{
 
 		$pageWidth = $this->getPageWidth();
 		$item_font_size = ($pageWidth < 160) ? 8 : 12;
-		$with_part_number = !empty($this->with_part_number);
+		// Barcode No label enabled in branch settings => the Barcode No column always shows (after S/N)
+		$with_part_number = !empty($this->with_part_number) || (get_item_barcode_label_key(!empty($this->store->id) ? $this->store->id : null) === 'barcode_no');
 		// Show VAT column + Taxable/VAT summary when store TRN enabled (TAX INVOICE)
 		$show_tax = is_branch_tax_enabled(!empty($store->id) ? $store->id : '');
 		$show_vat_summary = $show_tax;
@@ -1211,11 +1213,11 @@ class GstInvoice extends MyPDF{
 		if ($pageWidth < 160) {
 			$widthArray = array(
 				'sl_no' 		=> '6',
-				'barcode' 		=> '11',
-				'description' 	=> '24',
+				'barcode' 		=> '13',
+				'description' 	=> '23.5',
 				'unit' 			=> '8',
 				'qty' 			=> '8',
-				'rate' 	        => '11',
+				'rate' 	        => '9.5',
 				'dis'           => '9',
 				'tax'           => '11',
 				'amount' 		=> '12',
@@ -1223,11 +1225,11 @@ class GstInvoice extends MyPDF{
 		} else {
 			$widthArray = array(
 				'sl_no' 		=> '5',
-				'barcode' 		=> '12',
-				'description' 	=> '29',
+				'barcode' 		=> '14',
+				'description' 	=> '28.5',
 				'unit' 			=> '7',
 				'qty' 			=> '8',
-				'rate' 	        => '10',
+				'rate' 	        => '8.5',
 				'dis'           => '8',
 				'tax'           => '10',
 				'amount' 		=> '11',
