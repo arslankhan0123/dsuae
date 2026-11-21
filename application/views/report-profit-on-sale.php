@@ -116,15 +116,15 @@
                               <thead>
                                  <tr class="bg-blue">
                                     <th style="text-align: center;">Invoice Date</th>
-                                    <th style="text-align: left;">Invoice Number</th>
-                                    <th style="text-align: left;">Customer Name</th>
-                                    <th style="text-align: left;">Invoice Type</th>
-                                    <th style="text-align: right;">Invoice Amount</th>
-                                    <th style="text-align: right;">VAT Amount</th>
-                                    <th style="text-align: right;">Net Sales Amount</th>
-                                    <th style="text-align: right;">Cost of Goods Sold</th>
-                                    <th style="text-align: right;">Gross Profit</th>
-                                    <th style="text-align: right;">Gross Profit Margin %</th>
+                                    <th style="text-align: center;">Invoice Number</th>
+                                    <th style="text-align: center;">Customer Name</th>
+                                    <th style="text-align: center;">Invoice Type</th>
+                                    <th style="text-align: center;">Invoice Amount</th>
+                                    <th style="text-align: center;">VAT Amount</th>
+                                    <th style="text-align: center;">Net Sales Amount</th>
+                                    <th style="text-align: center;">Cost of Goods Sold</th>
+                                    <th style="text-align: center;">Gross Profit</th>
+                                    <th style="text-align: center;">Gross Profit Margin %</th>
                                     <th class="noExl" style="text-align: center;">Action</th>
                                  </tr>
                               </thead>

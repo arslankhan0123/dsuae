@@ -853,7 +853,7 @@ $CI = &get_instance();
             <?php } ?>
 
 
-            <?php if ($CI->permissions('sales_tax_report')) { ?>
+            <?php /* VAT Report: hidden when the branch TRN is empty (Settings > Branch) */ if ($CI->permissions('sales_tax_report') && is_branch_tax_enabled(get_current_store_id())) { ?>
               <li class="report-sales-tax-active-li"><a href="<?php echo $base_url; ?>reports/sales_tax"><i class="fa fa-files-o "></i> <span><?= $this->lang->line('sales_tax_report'); ?></span></a></li>
             <?php } ?>
 
