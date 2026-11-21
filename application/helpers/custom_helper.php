@@ -1990,6 +1990,7 @@
     $CI =& get_instance();
     $cols = array(
       'store_name_arabic' => "ALTER TABLE `db_store` ADD `store_name_arabic` VARCHAR(255) NULL DEFAULT NULL",
+      'store_last_name_arabic' => "ALTER TABLE `db_store` ADD `store_last_name_arabic` VARCHAR(255) NULL DEFAULT NULL",
       'address_arabic'    => "ALTER TABLE `db_store` ADD `address_arabic` TEXT NULL",
       'cr_no'             => "ALTER TABLE `db_store` ADD `cr_no` VARCHAR(100) NULL DEFAULT NULL",
       'bank_name'         => "ALTER TABLE `db_store` ADD `bank_name` VARCHAR(255) NULL DEFAULT NULL",

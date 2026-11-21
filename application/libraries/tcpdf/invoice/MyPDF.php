@@ -317,11 +317,34 @@ class MyPDF extends TCPDF {
 		$col_w = ($pageWidth - 10) * 0.40;
 		$mid_w = ($pageWidth - 10) * 0.20;
 
-		$store_name_en = strtoupper(html_entity_decode((string)$store->store_name, ENT_QUOTES, 'UTF-8'));
-		$store_name_en = htmlspecialchars(str_replace('&AMP;', '&', $store_name_en), ENT_QUOTES, 'UTF-8');
-		$store_name_ar = !empty($store->store_name_arabic)
-			? htmlspecialchars(html_entity_decode((string)$store->store_name_arabic, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8')
-			: $store_name_en;
+		// Company name: 1st line = Branch First Name, 2nd line = Branch Last Name (falls back to the full store name)
+		$name_clean = function ($value, $upper = false) {
+			$value = trim(html_entity_decode((string)$value, ENT_QUOTES, 'UTF-8'));
+			if ($upper) { $value = strtoupper($value); }
+			$value = str_replace(array('&AMP;', '&amp;'), '&', $value);
+			return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+		};
+		$en_first = $name_clean(isset($store->branch_first_name) ? $store->branch_first_name : '', true);
+		$en_last = $name_clean(isset($store->branch_last_name) ? $store->branch_last_name : '', true);
+		$en_name_lines = array();
+		if ($en_first !== '' || $en_last !== '') {
+			if ($en_first !== '') { $en_name_lines[] = $en_first; }
+			if ($en_last !== '') { $en_name_lines[] = $en_last; }
+		} else {
+			$en_name_lines[] = $name_clean($store->store_name, true);
+		}
+		// Arabic side: 1st line = Store Name (Arabic), 2nd line = Last Name (Arabic); English name when no Arabic is saved
+		$ar_first = $name_clean(isset($store->store_name_arabic) ? $store->store_name_arabic : '');
+		$ar_last = $name_clean(isset($store->store_last_name_arabic) ? $store->store_last_name_arabic : '');
+		$ar_name_lines = array();
+		if ($ar_first !== '') { $ar_name_lines[] = $ar_first; }
+		if ($ar_last !== '') { $ar_name_lines[] = $ar_last; }
+		if (empty($ar_name_lines)) { $ar_name_lines = $en_name_lines; }
+		// Same number of name lines on both sides so Mobile / Email / Website stay level
+		while (count($en_name_lines) < count($ar_name_lines)) { $en_name_lines[] = '&nbsp;'; }
+		while (count($ar_name_lines) < count($en_name_lines)) { $ar_name_lines[] = '&nbsp;'; }
+		$store_name_en = implode('<br/>', $en_name_lines);
+		$store_name_ar = implode('<br/>', $ar_name_lines);
 
 		$mobile = !empty($store->mobile) ? $store->mobile : (!empty($store->phone) ? $store->phone : '');
 		$mobile_fmt = $this->_format_header_mobile((string)$mobile);

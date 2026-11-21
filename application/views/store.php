@@ -44,6 +44,7 @@
                 $cr_no = '';
               }
               if(!isset($store_name_arabic)){ $store_name_arabic = ''; }
+              if(!isset($store_last_name_arabic)){ $store_last_name_arabic = ''; }
               if(!isset($address_arabic)){ $address_arabic = ''; }
               if(!isset($bank_name)){ $bank_name = ''; }
               if(!isset($account_name)){ $account_name = ''; }
@@ -131,8 +132,15 @@
                                                 <div class="form-group">
                                                    <label for="store_name_arabic" class="col-sm-4 control-label">Store Name (Arabic)</label>
                                                    <div class="col-sm-8">
-                                                      <input type="text" class="form-control" dir="rtl" id="store_name_arabic" name="store_name_arabic" placeholder="اسم الشركة بالعربي" onkeyup="shift_cursor(event,'cr_no')" value="<?= html_escape($store_name_arabic); ?>" >
+                                                      <input type="text" class="form-control" dir="rtl" id="store_name_arabic" name="store_name_arabic" placeholder="اسم الشركة بالعربي" onkeyup="shift_cursor(event,'store_last_name_arabic')" value="<?= html_escape($store_name_arabic); ?>" >
                                                       <span id="store_name_arabic_msg" style="display:none" class="text-danger"></span>
+                                                   </div>
+                                                </div>
+                                                <div class="form-group">
+                                                   <label for="store_last_name_arabic" class="col-sm-4 control-label">Last Name (Arabic)</label>
+                                                   <div class="col-sm-8">
+                                                      <input type="text" class="form-control" dir="rtl" id="store_last_name_arabic" name="store_last_name_arabic" placeholder="" onkeyup="shift_cursor(event,'cr_no')" value="<?= html_escape(html_entity_decode((string)$store_last_name_arabic, ENT_QUOTES, 'UTF-8')); ?>">
+                                                      <span id="store_last_name_arabic_msg" style="display:none" class="text-danger"></span>
                                                    </div>
                                                 </div>
                                                  <div class="form-group">

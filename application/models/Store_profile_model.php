@@ -79,6 +79,7 @@ class Store_profile_model extends CI_Model {
 		ensure_whatsapp_number_setting();
 		ensure_store_profile_columns();
 		$store_name_arabic = isset($store_name_arabic) ? trim($store_name_arabic) : '';
+		$store_last_name_arabic = isset($store_last_name_arabic) ? trim($store_last_name_arabic) : '';
 		$address_arabic = isset($address_arabic) ? trim($address_arabic) : '';
 		$pdf_part_number_popup = (isset($pdf_part_number_popup) && (int)$pdf_part_number_popup === 1) ? 1 : 0;
 		$item_barcode_label = (isset($item_barcode_label) && $item_barcode_label === 'barcode_no') ? 'barcode_no' : 'part_no';
@@ -116,6 +117,7 @@ class Store_profile_model extends CI_Model {
 							'branch_first_name'		=> $branch_first_name,
 							'branch_last_name'		=> $branch_last_name,
 							'store_name_arabic'		=> $store_name_arabic,
+							'store_last_name_arabic'	=> $store_last_name_arabic,
 							'cr_no'					=> isset($cr_no) ? $cr_no : '',
 		    				'store_website'				=> $store_website,
 		    				'location_url'				=> $location_url,
