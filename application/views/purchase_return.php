@@ -295,9 +295,9 @@
                                                    <th rowspan='2' style="width:10%"><?= get_item_barcode_label(); ?></th>
                                                    <th rowspan='2' style="width:20%"><?= (get_item_barcode_label_key() === 'barcode_no') ? $this->lang->line('item_name') : 'Part Name'; ?></th>
                                                    <th rowspan='2' style="width:15%;min-width: 180px;"><?= $this->lang->line('quantity'); ?></th>
-                                                   <th rowspan='2' style="width:10%"><?= $this->lang->line('purchase_price'); ?>(<?= $CI->currency(); ?>)</th>
+                                                   <th rowspan='2' style="width:10%"><?= $this->lang->line('purchase_price'); ?></th>
                                                    
-                                                   <th rowspan='2' style="width:6%"><?= $this->lang->line('discount'); ?>(<?= $CI->currency(); ?>)</th>
+                                                   <th rowspan='2' style="width:6%"><?= $this->lang->line('discount'); ?></th>
                                                    <th rowspan='2' class="branch-tax-col" style="width:7.5%"><?= (!empty($this->lang->line('vat_amount'))) ? $this->lang->line('vat_amount') : 'Vat Amount'; ?></th>
                                                    <th rowspan='2' style="width:7.5%"><?= $this->lang->line('unit_cost'); ?></th>
                                                    <th rowspan='2' style="width:7.5%">Amount</th>

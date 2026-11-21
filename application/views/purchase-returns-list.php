@@ -159,7 +159,7 @@
             <span class="info-box-icon bg-5"><i class="fa fa-dollar"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text"><?=$CI->currency(kmb($pur_total));?></span>
+              <span class="info-box-text"><?=kmb($pur_total);?></span>
               <span class="info-box-number"><?=$this->lang->line('total_invoices_amount');?></span>
             </div>
             <!-- /.info-box-content -->
@@ -176,7 +176,7 @@
             <span class="info-box-icon bg-5"><i class="fa fa-money"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text"><?=$CI->currency(kmb($paid_amount));?></span>
+              <span class="info-box-text"><?=kmb($paid_amount);?></span>
               <span class="info-box-number"><?=$this->lang->line('total_returned_amount');?></span>
             </div>
             <!-- /.info-box-content -->
@@ -189,7 +189,7 @@
             <span class="info-box-icon bg-5"><i class="fa fa-minus-circle"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text"><?=$CI->currency(kmb($purchase_due_total));?></span>
+              <span class="info-box-text"><?=kmb($purchase_due_total);?></span>
               <span class="info-box-number"><?=$this->lang->line('total_purchase_due');?></span>
             </div>
             <!-- /.info-box-content -->

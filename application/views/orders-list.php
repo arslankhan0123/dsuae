@@ -124,7 +124,7 @@
                   <div class="info-box " >
                     <span class="info-box-icon bg-5"><i class="fa fa-dollar"></i></span>
                     <div class="info-box-content">
-                      <span class="info-box-text"><?=$CI->currency(kmb($pur_total));?></span>
+                      <span class="info-box-text"><?=kmb($pur_total);?></span>
                       <span class="info-box-number">Total Invoices Amount</span>
                     </div>
                   </div>
@@ -135,7 +135,7 @@
                   <div class="info-box " >
                     <span class="info-box-icon bg-5"><i class="fa fa-money"></i></span>
                     <div class="info-box-content">
-                      <span class="info-box-text"><?=$CI->currency(kmb($tot_paid_amt));?></span>
+                      <span class="info-box-text"><?=kmb($tot_paid_amt);?></span>
                       <span class="info-box-number">Total Paid Amount</span>
                     </div>
                   </div>
@@ -145,7 +145,7 @@
                   <div class="info-box " >
                     <span class="info-box-icon bg-5"><i class="fa fa-minus-circle"></i></span>
                     <div class="info-box-content">
-                      <span class="info-box-text"><?=$CI->currency(kmb($order_due_total));?></span>
+                      <span class="info-box-text"><?=kmb($order_due_total);?></span>
                       <span class="info-box-number">Total Order Due</span>
                     </div>
                   </div>
