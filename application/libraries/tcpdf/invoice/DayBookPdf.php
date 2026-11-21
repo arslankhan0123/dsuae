@@ -120,22 +120,30 @@ class DayBookPdf extends MyPDF {
 		$c = $d['cash'];
 
 		/* Sales | Purchase */
-		$sales_html = $this->box_html('Sales Summary', array(
+		// Branch TRN empty => no "excl. VAT" / VAT rows, and the total is just "Net Sales" / "Net Purchase"
+		$sales_rows = array(
 			array('Gross Sales', $this->amt($s['gross'])),
 			array('Sales Discount', '- ' . $this->amt(abs($s['discount']))),
 			array('Sales Returns', '- ' . $this->amt(abs($s['returns']))),
-			array('Net Sales excl. VAT', $this->amt($s['net_excl']), 'strong'),
-			array($s['vat_label'], '+ ' . $this->amt(abs($s['vat']))),
-			array('Net Sales (incl. VAT)', $this->amt($s['net_incl']), 'total'),
-		), $fs);
-		$purchase_html = $this->box_html('Purchase Summary', array(
+		);
+		if (!empty($s['show_vat'])) {
+			$sales_rows[] = array('Net Sales excl. VAT', $this->amt($s['net_excl']), 'strong');
+			$sales_rows[] = array($s['vat_label'], '+ ' . $this->amt(abs($s['vat'])));
+		}
+		$sales_rows[] = array($s['net_label'], $this->amt($s['net_incl']), 'total');
+		$sales_html = $this->box_html('Sales Summary', $sales_rows, $fs);
+
+		$purchase_rows = array(
 			array('Gross Purchase', $this->amt($p['gross'])),
 			array('Purchase Discount', '- ' . $this->amt(abs($p['discount']))),
 			array('Purchase Returns', '- ' . $this->amt(abs($p['returns']))),
-			array('Net Purchase excl. VAT', $this->amt($p['net_excl']), 'strong'),
-			array($p['vat_label'], '+ ' . $this->amt(abs($p['vat']))),
-			array('Net Purchase (incl. VAT)', $this->amt($p['net_incl']), 'total'),
-		), $fs);
+		);
+		if (!empty($p['show_vat'])) {
+			$purchase_rows[] = array('Net Purchase excl. VAT', $this->amt($p['net_excl']), 'strong');
+			$purchase_rows[] = array($p['vat_label'], '+ ' . $this->amt(abs($p['vat'])));
+		}
+		$purchase_rows[] = array($p['net_label'], $this->amt($p['net_incl']), 'total');
+		$purchase_html = $this->box_html('Purchase Summary', $purchase_rows, $fs);
 		$this->two_boxes($sales_html, $purchase_html);
 
 		/* Cash reconciliation | Payment summary */
@@ -156,7 +164,6 @@ class DayBookPdf extends MyPDF {
 		foreach ($d['payments'] as $pay) {
 			$pay_rows[] = array(htmlspecialchars((string) $pay['label'], ENT_QUOTES, 'UTF-8'), $this->amt($pay['amount']));
 		}
-		$pay_rows[] = array('On Account (credit)', $this->amt($d['on_account']));
 		// Keep both boxes the same height so the page reads as one grid
 		while (count($pay_rows) < count($cash_rows) - 1) {
 			$pay_rows[] = array('&nbsp;', '&nbsp;');

@@ -14,7 +14,7 @@
     function daybook_minus($v) { return '&ndash; ' . store_number_format(abs((float) $v)); }
     function daybook_plus($v) { return '+ ' . store_number_format(abs((float) $v)); }
   }
-  $dot_colors = array('#10b981', '#3b82f6', '#f59e0b', '#14b8a6', '#a855f7', '#ec4899', '#6366f1', '#ef4444');
+  $dot_colors = array('#10b981', '#3b82f6', '#f59e0b', '#a855f7', '#94a3b8', '#ec4899', '#6366f1', '#ef4444');
 ?>
 <style>
   .daybook-page { padding: 18px; }
@@ -133,7 +133,6 @@
               <i class="fa fa-calendar-o"></i> <span><?= $date_label; ?></span>
               <input type="date" id="daybook_date" value="<?= $d['date']; ?>" max="<?= date('Y-m-d'); ?>">
             </label>
-            <button type="button" class="db-btn db-btn-outline" id="daybook_print"><i class="fa fa-print"></i> Print</button>
             <a class="db-btn db-btn-solid" target="_blank" href="<?= $base_url; ?>accounts/day_book_pdf?date=<?= $d['date']; ?>"><i class="fa fa-download"></i> Export PDF</a>
             <a class="db-close" href="<?= $base_url; ?>dashboard" title="Close"><i class="fa fa-times"></i></a>
           </div>
@@ -178,11 +177,8 @@
                 <button type="button" class="db-btn db-btn-solid" id="daybook_save">Save Cash Declaration</button>
               </div>
               <div class="db-saved-note" id="db_saved_note">
-                <?php if (!empty($d['declaration'])) {
-                  $dec = $d['declaration'];
-                  $by = !empty($dec->updated_by) ? $dec->updated_by : $dec->created_by;
-                  $on = !empty($dec->updated_date) ? $dec->updated_date : $dec->created_date;
-                  echo 'Saved' . (!empty($by) ? ' by ' . html_escape($by) : '') . (!empty($on) ? ' on ' . show_date($on) : '');
+                <?php if (!empty($d['saved'])) {
+                  echo 'Saved' . (!empty($d['saved']['by']) ? ' by ' . html_escape($d['saved']['by']) : '') . (!empty($d['saved']['on']) ? ' on ' . show_date($d['saved']['on']) : '');
                 } else {
                   echo 'Not saved yet for this date';
                 } ?>
@@ -197,9 +193,11 @@
               <div class="db-row" style="--dot:#3b82f6"><span class="lbl">Gross Sales</span><span class="val"><?= daybook_amt($d['sales']['gross']); ?></span></div>
               <div class="db-row" style="--dot:#f59e0b"><span class="lbl">Sales Discount</span><span class="val"><?= daybook_minus($d['sales']['discount']); ?></span></div>
               <div class="db-row" style="--dot:#a855f7"><span class="lbl">Sales Returns</span><span class="val"><?= daybook_minus($d['sales']['returns']); ?></span></div>
+              <?php if ($d['sales']['show_vat']) { /* hidden when the branch TRN is empty */ ?>
               <div class="db-row strong" style="--dot:#1e3a8a"><span class="lbl">Net Sales excl. VAT</span><span class="val"><?= daybook_amt($d['sales']['net_excl']); ?></span></div>
               <div class="db-row" style="--dot:#3b82f6"><span class="lbl"><?= $d['sales']['vat_label']; ?></span><span class="val"><?= daybook_plus($d['sales']['vat']); ?></span></div>
-              <div class="db-total blue"><span>Net Sales (incl. VAT)</span><span class="val"><?= daybook_amt($d['sales']['net_incl']); ?></span></div>
+              <?php } ?>
+              <div class="db-total blue"><span><?= $d['sales']['net_label']; ?></span><span class="val"><?= daybook_amt($d['sales']['net_incl']); ?></span></div>
             </div>
           </div>
 
@@ -210,9 +208,11 @@
               <div class="db-row" style="--dot:#f59e0b"><span class="lbl">Gross Purchase</span><span class="val"><?= daybook_amt($d['purchase']['gross']); ?></span></div>
               <div class="db-row" style="--dot:#10b981"><span class="lbl">Purchase Discount</span><span class="val"><?= daybook_minus($d['purchase']['discount']); ?></span></div>
               <div class="db-row" style="--dot:#14b8a6"><span class="lbl">Purchase Returns</span><span class="val"><?= daybook_minus($d['purchase']['returns']); ?></span></div>
+              <?php if ($d['purchase']['show_vat']) { /* hidden when the branch TRN is empty */ ?>
               <div class="db-row strong" style="--dot:#7c2d12"><span class="lbl">Net Purchase excl. VAT</span><span class="val"><?= daybook_amt($d['purchase']['net_excl']); ?></span></div>
               <div class="db-row" style="--dot:#94a3b8"><span class="lbl"><?= $d['purchase']['vat_label']; ?></span><span class="val"><?= daybook_plus($d['purchase']['vat']); ?></span></div>
-              <div class="db-total orange"><span>Net Purchase (incl. VAT)</span><span class="val"><?= daybook_amt($d['purchase']['net_incl']); ?></span></div>
+              <?php } ?>
+              <div class="db-total orange"><span><?= $d['purchase']['net_label']; ?></span><span class="val"><?= daybook_amt($d['purchase']['net_incl']); ?></span></div>
             </div>
           </div>
 
@@ -237,7 +237,6 @@
               <?php $pi = 0; foreach ($d['payments'] as $pay) { ?>
                 <div class="db-row" style="--dot:<?= $dot_colors[$pi % count($dot_colors)]; ?>"><span class="lbl"><?= html_escape($pay['label']); ?></span><span class="val"><?= daybook_amt($pay['amount']); ?></span></div>
               <?php $pi++; } ?>
-              <div class="db-row" style="--dot:#94a3b8"><span class="lbl">On Account (credit)</span><span class="val"><?= daybook_amt($d['on_account']); ?></span></div>
               <div class="db-total blue"><span>Total Received</span><span class="val"><?= daybook_amt($d['payment_total']); ?></span></div>
             </div>
           </div>
@@ -346,8 +345,6 @@
   $("#daybook_date").on('change', function () {
     if (this.value) { window.location = base_url + 'accounts/day_book?date=' + encodeURIComponent(this.value); }
   });
-
-  $("#daybook_print").on('click', function () { window.print(); });
 
   recalc();
 })();
