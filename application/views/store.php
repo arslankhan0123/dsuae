@@ -123,14 +123,14 @@
                                                    </div>
                                                 </div>
                                                 <div class="form-group">
-                                                   <label for="branch_last_name" class="col-sm-4 control-label">Branch Last Name<label class="text-danger">*</label></label>
+                                                   <label for="branch_last_name" class="col-sm-4 control-label">Branch Last Name</label>
                                                    <div class="col-sm-8">
                                                       <input type="text" class="form-control" id="branch_last_name" name="branch_last_name" placeholder="" onkeyup="shift_cursor(event,'store_name_arabic')" value="<?= html_escape($branch_last_name); ?>" >
                                                       <span id="branch_last_name_msg" style="display:none" class="text-danger"></span>
                                                    </div>
                                                 </div>
                                                 <div class="form-group">
-                                                   <label for="store_name_arabic" class="col-sm-4 control-label">Store Name (Arabic)</label>
+                                                   <label for="store_name_arabic" class="col-sm-4 control-label">First Name (Arabic)<label class="text-danger">*</label></label>
                                                    <div class="col-sm-8">
                                                       <input type="text" class="form-control" dir="rtl" id="store_name_arabic" name="store_name_arabic" placeholder="اسم الشركة بالعربي" onkeyup="shift_cursor(event,'store_last_name_arabic')" value="<?= html_escape($store_name_arabic); ?>" >
                                                       <span id="store_name_arabic_msg" style="display:none" class="text-danger"></span>

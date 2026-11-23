@@ -72,9 +72,9 @@ class GstInvoice extends MyPDF{
         $value_width = 97 - $label_width - $left_pad;
         $html = '<table border="0" cellpadding="0" cellspacing="0" style="width:100%;">';
         foreach ($rows as $label => $value) {
-            $html .= '<tr>'.($left_pad > 0 ? '<td style="width:'.$left_pad.'%;"></td>' : '').'<td style="width:'.$label_width.'%;white-space:nowrap;"><b>'.htmlspecialchars($label, ENT_QUOTES, 'UTF-8').'</b></td>'
-                . '<td style="width:3%;"><b>:</b></td>'
-                . '<td style="width:'.$value_width.'%;">'.nl2br(htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8')).'</td></tr>';
+            $html .= '<tr>'.($left_pad > 0 ? '<td style="width:'.$left_pad.'%;"></td>' : '').'<td style="width:'.$label_width.'%;white-space:nowrap;color:#555555;">'.htmlspecialchars($label, ENT_QUOTES, 'UTF-8').'</td>'
+                . '<td style="width:3%;color:#555555;">:</td>'
+                . '<td style="width:'.$value_width.'%;color:#000000;"><b>'.nl2br(htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8')).'</b></td></tr>'; // labels light, values dark
         }
         return $html.'</table>';
     }

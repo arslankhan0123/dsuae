@@ -58,10 +58,24 @@ class Items_model extends CI_Model {
 	public function __construct()
 	{
 		parent::__construct();
-		// Item 'Style' column: add it when the database does not have it yet (item edit/save read and write style_id)
+		// Item add / edit reads and writes these; add whatever this database does not have yet,
+		// otherwise the edit page breaks and Save / Update fails with an unknown column.
 		if (!$this->db->field_exists('style_id', 'db_items')) {
 			$this->db->query("ALTER TABLE `db_items` ADD `style_id` INT(11) NULL DEFAULT NULL");
 		}
+		if (!$this->db->field_exists('item_name_arabic', 'db_items')) {
+			$this->db->query("ALTER TABLE `db_items` ADD `item_name_arabic` VARCHAR(255) NULL DEFAULT NULL");
+		}
+		// Styles master used by the Style dropdown on the item form
+		$this->db->query("CREATE TABLE IF NOT EXISTS `db_styles` (
+			`id` INT(11) NOT NULL AUTO_INCREMENT,
+			`store_id` INT(11) NULL DEFAULT NULL,
+			`style_code` VARCHAR(50) NULL DEFAULT NULL,
+			`style_name` VARCHAR(255) NULL DEFAULT NULL,
+			`description` TEXT NULL,
+			`status` INT(11) NOT NULL DEFAULT 1,
+			PRIMARY KEY (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8");
 	}
 	
 	private function _get_datatables_query()

@@ -26,7 +26,8 @@ $('#update').on("click",function (e) {
 	//STORE
 	check_field("store_code");if(flag==false){$("#tab_4_btn").trigger('click');}
 	check_field("branch_first_name");if(flag==false){$("#tab_4_btn").trigger('click');}
-	check_field("branch_last_name");if(flag==false){$("#tab_4_btn").trigger('click');}
+	// Branch Last Name is optional; First Name (Arabic) is mandatory
+	check_field("store_name_arabic");if(flag==false){$("#tab_4_btn").trigger('click');}
 	check_field("mobile");	if(flag==false){$("#tab_4_btn").trigger('click');}
 	check_field("email");	if(flag==false){$("#tab_4_btn").trigger('click');}
 	check_field("country");if(flag==false){$("#tab_4_btn").trigger('click');}

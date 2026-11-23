@@ -313,7 +313,7 @@ class MyPDF extends TCPDF {
 		$detail_fs = $isA5 ? '9' : '10.5';
 		$logo_w = $isA5 ? 28 : 40;
 		$logo_h = $isA5 ? 18 : 24;
-		$company_y = 1.5;
+		$company_y = $isA5 ? 5 : 6; // top margin above the company header
 		$col_w = ($pageWidth - 10) * 0.40;
 		$mid_w = ($pageWidth - 10) * 0.20;
 
@@ -608,7 +608,7 @@ class MyPDF extends TCPDF {
             $this->SetFont($this->get_font_name(), 'B', $side_fs); // bold Generate / Page line
             // Generate the alias after selecting its rendering font (Unicode-aware).
             $page_txt = 'Page ' . $this->getPage() . ' of ' . $this->getAliasNbPages();
-            $this->SetTextColor(170, 170, 170);
+            $this->SetTextColor(0, 0, 0); // black Generate / Page text
             $this->SetX($this->lMargin);
             $this->Cell($usable / 2, 4, $this->footer_generate_text, 0, 0, 'L', false, '', 0, false, 'T', 'M');
             $this->Cell($usable / 2, 4, $page_txt, 0, 1, 'R', false, '', 0, false, 'T', 'M');

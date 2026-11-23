@@ -18,8 +18,13 @@ class Store_profile_model extends CI_Model {
 
 		$branch_first_name = isset($branch_first_name) ? trim($branch_first_name) : '';
 		$branch_last_name = isset($branch_last_name) ? trim($branch_last_name) : '';
-		if($branch_first_name === '' || $branch_last_name === ''){
-			echo 'Branch First Name and Branch Last Name are required.';
+		// First Name is mandatory, Last Name is optional (same rule for the Arabic names)
+		if($branch_first_name === ''){
+			echo 'Branch First Name is required.';
+			exit();
+		}
+		if(!isset($_POST['store_name_arabic']) || trim($_POST['store_name_arabic']) === ''){
+			echo 'First Name (Arabic) is required.';
 			exit();
 		}
 		$store_name = trim($branch_first_name.' '.$branch_last_name);
