@@ -16,29 +16,6 @@ class Day_book_model extends CI_Model {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->ensure_table();
-	}
-
-	/** Create the bank note / coin table the first time the Day Book is opened */
-	public function ensure_table()
-	{
-		$this->db->query("CREATE TABLE IF NOT EXISTS `bank_note_coin` (
-			`id` INT(11) NOT NULL AUTO_INCREMENT,
-			`store_id` INT(11) NOT NULL,
-			`entry_date` DATE NOT NULL,
-			`currency` DECIMAL(10,2) NOT NULL,
-			`type` VARCHAR(10) NOT NULL,
-			`qty` INT(11) NOT NULL DEFAULT 0,
-			`amount` DOUBLE(20,2) NOT NULL DEFAULT 0,
-			`created_by` VARCHAR(50) NULL DEFAULT NULL,
-			`created_date` DATE NULL DEFAULT NULL,
-			`created_time` VARCHAR(50) NULL DEFAULT NULL,
-			`updated_by` VARCHAR(50) NULL DEFAULT NULL,
-			`updated_date` DATE NULL DEFAULT NULL,
-			`updated_time` VARCHAR(50) NULL DEFAULT NULL,
-			PRIMARY KEY (`id`),
-			KEY `store_date` (`store_id`, `entry_date`)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8");
 	}
 
 	/** Accept only YYYY-MM-DD; anything else falls back to today */
@@ -118,11 +95,11 @@ class Day_book_model extends CI_Model {
 		/* ---------------- Sales ---------------- */
 		$sales_incl = $this->val("SELECT COALESCE(SUM(grand_total),0) AS v FROM db_sales WHERE store_id=? AND sales_date=? AND sales_status='Final'", $p);
 		$sales_vat = $this->val("SELECT COALESCE(SUM(si.tax_amt),0) AS v FROM db_salesitems si INNER JOIN db_sales s ON s.id=si.sales_id WHERE s.store_id=? AND s.sales_date=? AND s.sales_status='Final'", $p);
-		// tot_discount_to_all_amt already includes the row discounts on new invoices, so take the larger of the two
+		// Row discounts, invoice-level discounts, and coupon discounts are separate deductions.
 		$coupon_sql = $this->db->field_exists('coupon_amt', 'db_sales') ? " + COALESCE(s.coupon_amt,0)" : "";
-		$sales_disc = $this->val("SELECT COALESCE(SUM(GREATEST(COALESCE(s.tot_discount_to_all_amt,0), (SELECT COALESCE(SUM(d.discount_amt),0) FROM db_salesitems d WHERE d.sales_id=s.id))" . $coupon_sql . "),0) AS v FROM db_sales s WHERE s.store_id=? AND s.sales_date=? AND s.sales_status='Final'", $p);
-		$sret_incl = $this->val("SELECT COALESCE(SUM(grand_total),0) AS v FROM db_salesreturn WHERE store_id=? AND return_date=?", $p);
-		$sret_vat = $this->val("SELECT COALESCE(SUM(ri.tax_amt),0) AS v FROM db_salesitemsreturn ri INNER JOIN db_salesreturn r ON r.id=ri.return_id WHERE r.store_id=? AND r.return_date=?", $p);
+		$sales_disc = $this->val("SELECT COALESCE(SUM(COALESCE(s.tot_discount_to_all_amt,0) + (SELECT COALESCE(SUM(d.discount_amt),0) FROM db_salesitems d WHERE d.sales_id=s.id)" . $coupon_sql . "),0) AS v FROM db_sales s WHERE s.store_id=? AND s.sales_date=? AND s.sales_status='Final'", $p);
+		$sret_incl = $this->val("SELECT COALESCE(SUM(grand_total),0) AS v FROM db_salesreturn WHERE store_id=? AND return_date=? AND return_status='Return'", $p);
+		$sret_vat = $this->val("SELECT COALESCE(SUM(ri.tax_amt),0) AS v FROM db_salesitemsreturn ri INNER JOIN db_salesreturn r ON r.id=ri.return_id WHERE r.store_id=? AND r.return_date=? AND r.return_status='Return'", $p);
 		if (!$show_vat) {
 			$sales_vat = 0.0;
 			$sret_vat = 0.0;
@@ -138,15 +115,15 @@ class Day_book_model extends CI_Model {
 			'net_incl'  => $sales_incl - $sret_incl,
 			'show_vat'  => $show_vat,
 			'vat_label' => $this->vat_label($sales_vat, $sales_excl),
-			'net_label' => $show_vat ? 'Net Sales (incl. VAT)' : 'Net Sales',
+			'net_label' => 'Net Sales',
 		);
 
 		/* ---------------- Purchase ---------------- */
 		$pur_incl = $this->val("SELECT COALESCE(SUM(grand_total),0) AS v FROM db_purchase WHERE store_id=? AND purchase_date=?", $p);
 		$pur_vat = $this->val("SELECT COALESCE(SUM(pit.tax_amt),0) AS v FROM db_purchaseitems pit INNER JOIN db_purchase pu ON pu.id=pit.purchase_id WHERE pu.store_id=? AND pu.purchase_date=?", $p);
 		$pur_disc = $this->val("SELECT COALESCE(SUM(COALESCE(pu.tot_discount_to_all_amt,0) + (SELECT COALESCE(SUM(d.discount_amt),0) FROM db_purchaseitems d WHERE d.purchase_id=pu.id)),0) AS v FROM db_purchase pu WHERE pu.store_id=? AND pu.purchase_date=?", $p);
-		$pret_incl = $this->val("SELECT COALESCE(SUM(grand_total),0) AS v FROM db_purchasereturn WHERE store_id=? AND return_date=?", $p);
-		$pret_vat = $this->val("SELECT COALESCE(SUM(ri.tax_amt),0) AS v FROM db_purchaseitemsreturn ri INNER JOIN db_purchasereturn r ON r.id=ri.return_id WHERE r.store_id=? AND r.return_date=?", $p);
+		$pret_incl = $this->val("SELECT COALESCE(SUM(grand_total),0) AS v FROM db_purchasereturn WHERE store_id=? AND return_date=? AND return_status='Return'", $p);
+		$pret_vat = $this->val("SELECT COALESCE(SUM(ri.tax_amt),0) AS v FROM db_purchaseitemsreturn ri INNER JOIN db_purchasereturn r ON r.id=ri.return_id WHERE r.store_id=? AND r.return_date=? AND r.return_status='Return'", $p);
 		if (!$show_vat) {
 			$pur_vat = 0.0;
 			$pret_vat = 0.0;
@@ -161,8 +138,9 @@ class Day_book_model extends CI_Model {
 			'vat'       => $pur_vat - $pret_vat,        // sum of VAT
 			'net_incl'  => $pur_incl - $pret_incl,
 			'show_vat'  => $show_vat,
+			'gross_label' => $show_vat ? 'Gross Purchase' : 'Gross Purchases',
 			'vat_label' => $this->vat_label($pur_vat, $pur_excl),
-			'net_label' => $show_vat ? 'Net Purchase (incl. VAT)' : 'Net Purchase',
+			'net_label' => $show_vat ? 'Net Purchase' : 'Net Purchases',
 		);
 
 		/* ---------------- Payment summary (money received on this date) ---------------- */

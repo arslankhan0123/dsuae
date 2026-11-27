@@ -208,7 +208,7 @@
           <div class="db-card">
             <div class="db-card-body">
               <h4 class="db-card-title"><span class="db-ico orange"><i class="fa fa-shopping-bag"></i></span> Purchase Summary</h4>
-              <div class="db-row" style="--dot:#f59e0b"><span class="lbl">Gross Purchase</span><span class="val"><?= daybook_amt($d['purchase']['gross']); ?></span></div>
+              <div class="db-row" style="--dot:#f59e0b"><span class="lbl"><?= $d['purchase']['gross_label']; ?></span><span class="val"><?= daybook_amt($d['purchase']['gross']); ?></span></div>
               <div class="db-row" style="--dot:#10b981"><span class="lbl">Purchase Discount</span><span class="val"><?= daybook_minus($d['purchase']['discount']); ?></span></div>
               <div class="db-row" style="--dot:#14b8a6"><span class="lbl">Purchase Returns</span><span class="val"><?= daybook_minus($d['purchase']['returns']); ?></span></div>
               <?php if ($d['purchase']['show_vat']) { /* hidden when the branch TRN is empty */ ?>
@@ -240,7 +240,7 @@
               <?php $pi = 0; foreach ($d['payments'] as $pay) { ?>
                 <div class="db-row" style="--dot:<?= $dot_colors[$pi % count($dot_colors)]; ?>"><span class="lbl"><?= html_escape($pay['label']); ?></span><span class="val"><?= daybook_amt($pay['amount']); ?></span></div>
               <?php $pi++; } ?>
-              <div class="db-total blue"><span>Total Received</span><span class="val"><?= daybook_amt($d['payment_total']); ?></span></div>
+              <div class="db-total blue"><span>Total Payments</span><span class="val"><?= daybook_amt($d['payment_total']); ?></span></div>
             </div>
           </div>
 

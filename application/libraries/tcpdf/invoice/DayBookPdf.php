@@ -134,7 +134,7 @@ class DayBookPdf extends MyPDF {
 		$sales_html = $this->box_html('Sales Summary', $sales_rows, $fs);
 
 		$purchase_rows = array(
-			array('Gross Purchase', $this->amt($p['gross'])),
+			array($p['gross_label'], $this->amt($p['gross'])),
 			array('Purchase Discount', '- ' . $this->amt(abs($p['discount']))),
 			array('Purchase Returns', '- ' . $this->amt(abs($p['returns']))),
 		);
@@ -168,7 +168,7 @@ class DayBookPdf extends MyPDF {
 		while (count($pay_rows) < count($cash_rows) - 1) {
 			$pay_rows[] = array('&nbsp;', '&nbsp;');
 		}
-		$pay_rows[] = array('Total Received', $this->amt($d['payment_total']), 'total');
+		$pay_rows[] = array('Total Payments', $this->amt($d['payment_total']), 'total');
 		while (count($cash_rows) < count($pay_rows)) {
 			array_splice($cash_rows, count($cash_rows) - 1, 0, array(array('&nbsp;', '&nbsp;')));
 		}
