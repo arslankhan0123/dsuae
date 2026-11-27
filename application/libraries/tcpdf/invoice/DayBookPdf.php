@@ -128,7 +128,7 @@ class DayBookPdf extends MyPDF {
 		);
 		if (!empty($s['show_vat'])) {
 			$sales_rows[] = array('Net Sales excl. VAT', $this->amt($s['net_excl']), 'strong');
-			$sales_rows[] = array($s['vat_label'], '+ ' . $this->amt(abs($s['vat'])));
+			$sales_rows[] = array($s['vat_label'], $this->amt(abs($s['vat'])));
 		}
 		$sales_rows[] = array($s['net_label'], $this->amt($s['net_incl']), 'total');
 		$sales_html = $this->box_html('Sales Summary', $sales_rows, $fs);
@@ -140,7 +140,7 @@ class DayBookPdf extends MyPDF {
 		);
 		if (!empty($p['show_vat'])) {
 			$purchase_rows[] = array('Net Purchase excl. VAT', $this->amt($p['net_excl']), 'strong');
-			$purchase_rows[] = array($p['vat_label'], '+ ' . $this->amt(abs($p['vat'])));
+			$purchase_rows[] = array($p['vat_label'], $this->amt(abs($p['vat'])));
 		}
 		$purchase_rows[] = array($p['net_label'], $this->amt($p['net_incl']), 'total');
 		$purchase_html = $this->box_html('Purchase Summary', $purchase_rows, $fs);
@@ -149,11 +149,11 @@ class DayBookPdf extends MyPDF {
 		/* Cash reconciliation | Payment summary */
 		$diff = round((float) $c['counted'] - (float) $c['expected'], 2);
 		$diff_label = 'Cash Difference' . ($diff < 0 ? ' (short)' : ($diff > 0 ? ' (over)' : ''));
-		$diff_value = ($diff < 0 ? '- ' : ($diff > 0 ? '+ ' : '')) . $this->amt(abs($diff));
-		$paid_out_value = ($c['paid_out'] < 0 ? '+ ' : '- ') . $this->amt(abs($c['paid_out']));
+		$diff_value = ($diff < 0 ? '- ' : '') . $this->amt(abs($diff));
+		$paid_out_value = ($c['paid_out'] < 0 ? '' : '- ') . $this->amt(abs($c['paid_out']));
 		$cash_rows = array(
 			array('Opening Cash', $this->amt($c['opening'])),
-			array('Cash Sales', '+ ' . $this->amt(abs($c['sales']))),
+			array('Cash Sales', $this->amt(abs($c['sales']))),
 			array('Cash Refunds', '- ' . $this->amt(abs($c['refunds']))),
 			array('Cash Paid Out', $paid_out_value),
 			array('Expected Cash in Drawer', $this->amt($c['expected']), 'strong'),
@@ -176,7 +176,7 @@ class DayBookPdf extends MyPDF {
 
 		/* Denomination count (full width): notes on the left, coins on the right */
 		$notes = $d['notes'];
-		$coins = $d['coins'];
+		$coins = array_values(array_filter($d['coins'], function ($coin) { return (float) $coin !== 0.10; }));
 		$notes_total = 0.0;
 		$coins_total = 0.0;
 		$th = 'border:' . $b . ';font-weight:bold;';

@@ -13,3 +13,5 @@ AND (`a`.`sales_date` >= '2026-11-27' and `a`.`sales_date` <= '2026-11-27')
 AND `a`.`store_id` = '2'
 ORDER BY `a`.`sales_date` DESC, `a`.`sales_code` DESC
 ERROR - 2026-11-27 16:17:09 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-11-27 17:29:00 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-11-27 17:31:10 --> 404 Page Not Found: Faviconico/index
