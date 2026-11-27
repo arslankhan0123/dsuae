@@ -8,11 +8,11 @@
 <?php
   $d = $daybook;
   $ts = strtotime($d['date']);
-  $date_label = ($d['is_today'] ? 'Today, ' : date('D, ', $ts)) . date('d M Y', $ts);
+  $date_label = date('d M Y', $ts);
   if (!function_exists('daybook_amt')) {
     function daybook_amt($v) { return store_number_format((float) $v); }
     function daybook_minus($v) { return '&ndash; ' . store_number_format(abs((float) $v)); }
-    function daybook_plus($v) { return '+ ' . store_number_format(abs((float) $v)); }
+    function daybook_plus($v) { return store_number_format(abs((float) $v)); }
   }
   $dot_colors = array('#10b981', '#3b82f6', '#f59e0b', '#a855f7', '#94a3b8', '#ec4899', '#6366f1', '#ef4444');
 ?>
@@ -292,7 +292,7 @@
     } else if (diff > 0) {
       box.addClass('green');
       $("#db_diff_label").text('Cash Difference (over)');
-      $("#db_diff").text('+ ' + fmt(diff));
+      $("#db_diff").text(fmt(diff));
     } else {
       box.addClass('neutral');
       $("#db_diff_label").text('Cash Difference');
