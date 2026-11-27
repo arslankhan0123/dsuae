@@ -143,11 +143,10 @@
           <!-- Denomination count (user entry) -->
           <div class="db-card db-left">
             <div class="db-counted">
-              <div class="db-counted-top"><span>Counted so far</span><span>Drawer denominations</span></div>
+              <div class="db-counted-top"><span>Denomination Count</span></div>
               <div class="db-counted-num" id="db_counted">0.00</div>
             </div>
             <div class="db-card-body">
-              <h4 class="db-den-title">Denomination Count</h4>
               <div class="db-den-cols">
                 <div class="db-den-col">
                   <div class="db-den-head"><span>Note</span><span>Qty</span><span>Subtotal</span></div>
@@ -162,7 +161,7 @@
                 </div>
                 <div class="db-den-col">
                   <div class="db-den-head"><span>Coin</span><span>Qty</span><span>Subtotal</span></div>
-                  <?php foreach ($d['coins'] as $c) { ?>
+                  <?php foreach ($d['coins'] as $c) { if ((float) $c === 0.10) { continue; } ?>
                     <div class="db-den-row">
                       <span class="den"><?= $c; ?></span>
                       <input type="number" min="0" step="1" inputmode="numeric" class="db-qty" data-group="coins" data-key="<?= $c; ?>" data-value="<?= (float) $c; ?>" value="<?= (int) $d['counts']['coins'][$c]; ?>">
@@ -173,10 +172,9 @@
                 </div>
               </div>
               <div class="db-den-actions">
-                <button type="button" class="db-btn db-btn-outline" id="daybook_calc">Calculate Total</button>
                 <button type="button" class="db-btn db-btn-solid" id="daybook_save">Save Cash Declaration</button>
               </div>
-              <div class="db-saved-note" id="db_saved_note">
+              <div class="db-saved-note" id="db_saved_note" style="display:none">
                 <?php if (!empty($d['saved'])) {
                   echo 'Saved' . (!empty($d['saved']['by']) ? ' by ' . html_escape($d['saved']['by']) : '') . (!empty($d['saved']['on']) ? ' on ' . show_date($d['saved']['on']) : '');
                 } else {
@@ -305,8 +303,6 @@
 
   $(document).on('input change', '.db-qty', recalc);
   $(document).on('focus', '.db-qty', function () { this.select(); });
-  $("#daybook_calc").on('click', recalc);
-
   $("#daybook_save").on('click', function () {
     recalc();
     var counts = { notes: {}, coins: {} };
