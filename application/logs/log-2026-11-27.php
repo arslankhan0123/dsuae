@@ -15,3 +15,7 @@ ORDER BY `a`.`sales_date` DESC, `a`.`sales_code` DESC
 ERROR - 2026-11-27 16:17:09 --> 404 Page Not Found: Theme/plugins
 ERROR - 2026-11-27 17:29:00 --> 404 Page Not Found: Faviconico/index
 ERROR - 2026-11-27 17:31:10 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-11-27 21:17:43 --> Severity: Warning --> mysqli::real_connect(): (HY000/2002): No connection could be made because the target machine actively refused it.
+ F:\Projects\dsuae\system\database\drivers\mysqli\mysqli_driver.php 201
+ERROR - 2026-11-27 21:17:43 --> Unable to connect to the database
+ERROR - 2026-11-27 21:17:45 --> 404 Page Not Found: Faviconico/index
