@@ -44,13 +44,21 @@
                                     }?>
                                  <!-- Store Code end -->
                                  <!-- Warehouse Code -->
-                                 <?php 
-                                 
+                                 <?php
                                   if(true) {$this->load->view('warehouse/warehouse_code',array('show_warehouse_select_box'=>true,'div_length'=>'col-sm-3','show_all'=>'true','form_group_remove' => 'true','show_all_option'=>true)); }else{
                                      echo "<input type='hidden' name='warehouse_id' id='warehouse_id' value='".get_store_warehouse_id()."'>";
                                   }
                                  ?>
                                  <!-- Warehouse Code end -->
+                              </div>
+                              <div class="form-group">
+                                 <label for="customer_id" class="col-sm-2 control-label"><?= $this->lang->line('customer_name'); ?></label>
+                                 <div class="col-sm-3">
+                                    <select class="form-control select2" id="customer_id" name="customer_id">
+                                       <option value="">-All-</option>
+                                       <?= get_customers_select_list(null,get_current_store_id()); ?>
+                                    </select>
+                                 </div>
 
                                  <label for="item_id" class="col-sm-2 control-label"><?= $this->lang->line('item_type'); ?></label>
                                  <div class="col-sm-3">
@@ -62,7 +70,6 @@
                                     </select>
                                     <span id="item_id_msg" style="display:none" class="text-danger"></span>
                                  </div>
-
                               </div>
                               <div class="form-group">
                                  <label for="category_id" class="col-sm-2 control-label"><?= $this->lang->line('category'); ?></label>
@@ -147,13 +154,13 @@
                                     <th style=""><?= $this->lang->line('store_name'); ?></th>
                                     <?php } ?>
                                     <th style=""><?= $this->lang->line('invoice_no'); ?></th>
-                                    <th style=""><?= $this->lang->line('sales_date'); ?></th>
+                                    <th style="">Invoice Date</th>
                                     <th style=""><?= $this->lang->line('customer_name'); ?></th>
                                     <th style=""><?= $this->lang->line('item_name'); ?></th>
                                     <th style=""><?= $this->lang->line('category'); ?></th>
                                     <th style=""><?= $this->lang->line('quantity'); ?></th>
-                                    <th style=""><?= $this->lang->line('unit_price'); ?>(<?= $CI->currency(); ?>)</th>
-                                    <th style=""><?= $this->lang->line('total'); ?>(<?= $CI->currency(); ?>)</th>
+                                    <th style="">Sale Price</th>
+                                    <th style="">Total</th>
                                  </tr>
                               </thead>
                               <tbody id="tbodyid">
@@ -186,6 +193,10 @@
          var base_url=$("#base_url").val();
          $("#store_id").on("change",function(){
            var store_id=$(this).val();
+           $.post(base_url+"sales/get_customers_select_list",{store_id:store_id},function(result){
+              result='<option value="">-All-</option>'+result;
+              $("#customer_id").html('').append(result).select2();
+           });
            //Load Items
            load_items_list();
 

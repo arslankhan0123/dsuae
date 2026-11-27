@@ -1096,7 +1096,7 @@ class Reports_model extends CI_Model {
 			$this->db->where("a.warehouse_id",$warehouse_id);
 		}
 		
-		$this->db->select("a.id,a.sales_code,a.sales_date,b.customer_name,b.customer_code,a.grand_total,a.paid_amount,a.store_id,c.unit_total_cost,c.total_cost,e.category_name");
+		$this->db->select("a.id,a.sales_code,a.sales_date,b.customer_name,b.customer_code,a.grand_total,a.paid_amount,a.store_id,c.price_per_unit,c.total_cost,e.category_name");
 		$this->db->select("c.sales_qty,d.item_name");
 	    
 	    
@@ -1109,6 +1109,9 @@ class Reports_model extends CI_Model {
 		}
 		if(!empty($store_id)){
 			$this->db->where("a.store_id",$store_id);
+		}
+		if(!empty($customer_id)){
+			$this->db->where("a.customer_id",(int)$customer_id);
 		}
 		$this->db->order_by("a.`sales_date`,a.sales_code",'desc');
 
@@ -1156,7 +1159,7 @@ class Reports_model extends CI_Model {
 				echo "<td>".$res1->item_name."</td>";
 				echo "<td>".$res1->category_name."</td>";
 				echo "<td>".format_qty($res1->sales_qty)."</td>";
-				echo "<td class='text-right'>".store_number_format($res1->unit_total_cost)."</td>";
+				echo "<td class='text-right'>".store_number_format($res1->price_per_unit)."</td>";
 				echo "<td class='text-right'>".store_number_format($res1->total_cost)."</td>";
 				echo "</tr>";
 				$tot_sales_qty+=$res1->sales_qty;
