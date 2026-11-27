@@ -25,6 +25,8 @@
   /* Header */
   .db-head { background: #fff; border-bottom: 1px solid #edf1f5; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
   .db-title { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 600; margin: 0; }
+  .db-heading { display: flex; flex-direction: column; gap: 3px; }
+  .db-subtitle { margin: 0; color: #64748b; font-size: 13px; font-weight: 500; }
   .db-title i { color: #1ea5e8; font-size: 22px; }
   .db-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .db-pill { position: relative; display: inline-flex; align-items: center; gap: 9px; height: 36px; padding: 0 16px; border-radius: 999px; border: 1px solid #dfe6ee; background: #fff; color: #0f172a; font-size: 14px; font-weight: 500; cursor: pointer; margin: 0; }
@@ -127,7 +129,10 @@
 
         <!-- Header -->
         <div class="db-head">
-          <h2 class="db-title"><i class="fa fa-book"></i> Day Book</h2>
+          <div class="db-heading">
+            <h2 class="db-title"><i class="fa fa-book"></i> Day Book</h2>
+            <p class="db-subtitle">End of Day Report</p>
+          </div>
           <div class="db-actions">
             <label class="db-pill" title="Change date">
               <i class="fa fa-calendar-o"></i> <span><?= $date_label; ?></span>
