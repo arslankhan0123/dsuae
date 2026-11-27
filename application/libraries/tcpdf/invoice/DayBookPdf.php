@@ -148,7 +148,7 @@ class DayBookPdf extends MyPDF {
 
 		/* Cash reconciliation | Payment summary */
 		$diff = round((float) $c['counted'] - (float) $c['expected'], 2);
-		$diff_label = 'Cash Difference' . ($diff < 0 ? ' (short)' : ($diff > 0 ? ' (over)' : ''));
+		$diff_label = 'Cash Difference' . ($diff > 0 ? ' (over)' : '');
 		$diff_value = ($diff < 0 ? '- ' : '') . $this->amt(abs($diff));
 		$paid_out_value = ($c['paid_out'] < 0 ? '' : '- ') . $this->amt(abs($c['paid_out']));
 		$cash_rows = array(

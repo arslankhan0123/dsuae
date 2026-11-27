@@ -292,7 +292,7 @@
     var box = $("#db_diff_box").removeClass('red green neutral');
     if (diff < 0) {
       box.addClass('red');
-      $("#db_diff_label").text('Cash Difference (short)');
+      $("#db_diff_label").text('Cash Difference');
       $("#db_diff").html('&ndash; ' + fmt(Math.abs(diff)));
     } else if (diff > 0) {
       box.addClass('green');
